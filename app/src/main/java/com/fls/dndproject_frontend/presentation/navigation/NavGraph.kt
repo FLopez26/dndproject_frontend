@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fls.dndproject_frontend.presentation.ui.screens.createAccount.CreateAccountScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.login.LoginScreen
 
 @Composable
@@ -12,6 +13,9 @@ fun NavGraph() {
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(route = Screen.Login.route) {
             LoginScreen()
+        }
+        composable(route = Screen.CreateAccount.route) {
+            CreateAccountScreen()
         }
     }
 }

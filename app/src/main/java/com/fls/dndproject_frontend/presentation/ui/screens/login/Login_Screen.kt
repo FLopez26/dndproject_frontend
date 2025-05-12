@@ -75,7 +75,7 @@ fun LoginScreen() {
             onValueChange = { email = it },
             label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth(),
-            colors = outlinedTextFieldColors // Aplica los colores personalizados
+            colors = outlinedTextFieldColors
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -91,7 +91,7 @@ fun LoginScreen() {
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = outlinedTextFieldColors // Aplica los colores personalizados
+            colors = outlinedTextFieldColors
         )
         Spacer(modifier = Modifier.height(16.dp))
 
