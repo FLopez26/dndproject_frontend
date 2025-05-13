@@ -16,35 +16,26 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
+import com.example.dndproject_frontend.ui.theme.AppStyles.buttonColors
+import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 import com.example.dndproject_frontend.ui.theme.RedPrimary
+import com.fls.dndproject_frontend.presentation.navigation.Screen
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController,
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val outlinedTextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = Color.Black,
-        unfocusedBorderColor = Color.Black,
-        cursorColor = Color.Black,
-        focusedTextColor = MaterialTheme.colorScheme.onBackground,
-        focusedLabelColor = Color.Black,
-        unfocusedLabelColor = Color.Black
-    )
-
-    val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = RedPrimary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -95,7 +86,7 @@ fun LoginScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = { /* TODO: Implementar acción de crear cuenta */ }) {
+        TextButton(onClick = { navController.navigate(Screen.CreateAccount.route) }) {
             Text(
                 "Crear cuenta",
                 color = RedPrimary

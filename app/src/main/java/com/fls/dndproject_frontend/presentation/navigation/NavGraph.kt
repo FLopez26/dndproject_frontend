@@ -12,10 +12,10 @@ fun NavGraph() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(route = Screen.Login.route) {
-            LoginScreen()
+            LoginScreen(navController)
         }
         composable(route = Screen.CreateAccount.route) {
-            CreateAccountScreen()
+            CreateAccountScreen(navController)
         }
     }
 }

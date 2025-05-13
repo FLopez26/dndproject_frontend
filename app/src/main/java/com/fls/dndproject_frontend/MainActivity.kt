@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import com.example.dndproject_frontend.ui.theme.Dndproject_frontendTheme
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
             Dndproject_frontendTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color(0xFFF0F0F0)
                 ) {
                     NavGraph()
                 }
