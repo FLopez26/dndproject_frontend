@@ -15,7 +15,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.dndproject_frontend.ui.theme.AppStyles
+import com.example.dndproject_frontend.ui.theme.AppStyles.buttonColors
+import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
+import com.example.dndproject_frontend.ui.theme.RedPrimary
+import com.fls.dndproject_frontend.presentation.navigation.Screen
 
 @Composable
 fun CreateAccountScreen(
@@ -31,41 +34,41 @@ fun CreateAccountScreen(
     Scaffold { innerPadding ->
         Column(
             Modifier.padding(innerPadding)
+                .fillMaxSize()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(50.dp))
             Text(
-                modifier = Modifier
-                    .padding(30.dp)
-                    .align(Alignment.CenterHorizontally),
                 text = "Crea una cuenta \ny comienza tu aventura",
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
             )
-
+            Spacer(modifier = Modifier.height(120.dp))
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
+                maxLines = 1,
                 label = { Text("Nombre de usuario") },
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = AppStyles.outlinedTextFieldColors
+                modifier = Modifier.fillMaxWidth(),
+                colors = outlinedTextFieldColors
             )
-
+            Spacer(modifier = Modifier.height(25.dp))
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
+                maxLines = 1,
                 label = { Text("Correo electrónico") },
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = AppStyles.outlinedTextFieldColors
+                modifier = Modifier.fillMaxWidth(),
+                colors = outlinedTextFieldColors
             )
-
+            Spacer(modifier = Modifier.height(25.dp))
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
+                maxLines = 1,
                 label = { Text("Contraseña") },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -74,40 +77,42 @@ fun CreateAccountScreen(
                         Icon(imageVector = imagen, contentDescription = null)
                     }
                 },
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = AppStyles.outlinedTextFieldColors
+                modifier = Modifier.fillMaxWidth(),
+                colors = outlinedTextFieldColors
             )
-
+            Spacer(modifier = Modifier.height(25.dp))
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirme su contraseña") },
+                maxLines = 1,
+                label = { Text("Repita su contraseña") },
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    val imagen = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    val imagen = if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                         Icon(imageVector = imagen, contentDescription = null)
                     }
                 },
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = AppStyles.outlinedTextFieldColors
+                modifier = Modifier.fillMaxWidth(),
+                colors = outlinedTextFieldColors
             )
-
+            Spacer(modifier = Modifier.height(35.dp))
+            TextButton(onClick = { navController.navigate(Screen.Login.route) }) {
+                Text(
+                    "Volver",
+                    color = RedPrimary
+                )
+            }
+            Spacer(modifier = Modifier.height(25.dp))
             Button(
-                onClick = { /* TODO: Implementar lógica de creación de cuenta */ },
+                onClick = { /* TODO: Implementar lógica de inicio de sesión */ },
                 modifier = Modifier
                     .align(Alignment.End)
-                    .width(130.dp)
-                    .padding(30.dp),
-                colors = AppStyles.buttonColors
+                    .width(130.dp),
+                colors = buttonColors
             ) {
-                Text("Comenzar")
+                Text("Crear")
             }
-
         }
     }
 }
