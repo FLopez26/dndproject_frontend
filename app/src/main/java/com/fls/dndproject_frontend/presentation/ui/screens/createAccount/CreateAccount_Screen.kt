@@ -19,14 +19,17 @@ import com.example.dndproject_frontend.ui.theme.AppStyles.buttonColors
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 import com.example.dndproject_frontend.ui.theme.RedPrimary
 import com.fls.dndproject_frontend.presentation.navigation.Screen
+import com.fls.dndproject_frontend.presentation.viewmodel.createAccount.CreateAccountViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateAccountScreen(
     navController: NavController,
+    createAccountViewModel: CreateAccountViewModel = koinViewModel()
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val username by createAccountViewModel.username.collectAsState()
+    val email by createAccountViewModel.email.collectAsState()
+    val password by createAccountViewModel.password.collectAsState()
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
@@ -46,10 +49,10 @@ fun CreateAccountScreen(
                     fontWeight = FontWeight.ExtraBold
                 )
             )
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(110.dp))
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = { createAccountViewModel.setUsername(it) },
                 maxLines = 1,
                 label = { Text("Nombre de usuario") },
                 modifier = Modifier.fillMaxWidth(),
@@ -58,7 +61,7 @@ fun CreateAccountScreen(
             Spacer(modifier = Modifier.height(25.dp))
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { createAccountViewModel.setEmail(it) },
                 maxLines = 1,
                 label = { Text("Correo electrónico") },
                 modifier = Modifier.fillMaxWidth(),
@@ -67,7 +70,7 @@ fun CreateAccountScreen(
             Spacer(modifier = Modifier.height(25.dp))
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { createAccountViewModel.setPassword(it) },
                 maxLines = 1,
                 label = { Text("Contraseña") },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -105,7 +108,7 @@ fun CreateAccountScreen(
             }
             Spacer(modifier = Modifier.height(25.dp))
             Button(
-                onClick = { /* TODO: Implementar lógica de inicio de sesión */ },
+                onClick = { createAccountViewModel.saveUser() },
                 modifier = Modifier
                     .align(Alignment.End)
                     .width(130.dp),
