@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
+import androidx.compose.material3.* // Importa todo de Material3 para SnackbarHostState, SnackbarDuration
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +22,7 @@ import com.fls.dndproject_frontend.presentation.navigation.Screen
 import com.fls.dndproject_frontend.presentation.viewmodel.createAccount.CreateAccountViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class) // Necesario para el Scaffold con SnackbarHost
 @Composable
 fun CreateAccountScreen(
     navController: NavController,
@@ -34,14 +35,29 @@ fun CreateAccountScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
-    Scaffold { innerPadding ->
+    val message by createAccountViewModel.message.collectAsState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(message) {
+        message?.let {
+            snackbarHostState.showSnackbar(
+                message = it,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
         Column(
             Modifier.padding(innerPadding)
                 .fillMaxSize()
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = "Crea una cuenta \ny comienza tu aventura",
                 style = TextStyle(
@@ -49,7 +65,7 @@ fun CreateAccountScreen(
                     fontWeight = FontWeight.ExtraBold
                 )
             )
-            Spacer(modifier = Modifier.height(110.dp))
+            Spacer(modifier = Modifier.height(90.dp))
             OutlinedTextField(
                 value = username,
                 onValueChange = { createAccountViewModel.setUsername(it) },
@@ -99,7 +115,8 @@ fun CreateAccountScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = outlinedTextFieldColors
             )
-            Spacer(modifier = Modifier.height(35.dp))
+            Spacer(modifier = Modifier.height(25.dp))
+
             TextButton(onClick = { navController.navigate(Screen.Login.route) }) {
                 Text(
                     "Volver",
@@ -108,7 +125,7 @@ fun CreateAccountScreen(
             }
             Spacer(modifier = Modifier.height(25.dp))
             Button(
-                onClick = { createAccountViewModel.saveUser() },
+                onClick = { createAccountViewModel.createAccount(confirmPassword) },
                 modifier = Modifier
                     .align(Alignment.End)
                     .width(130.dp),

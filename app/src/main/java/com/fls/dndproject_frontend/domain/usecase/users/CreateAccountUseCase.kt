@@ -1,4 +1,4 @@
-package com.fls.dndproject_frontend.domain.usecase.createAccount
+package com.fls.dndproject_frontend.domain.usecase.users
 
 import com.fls.dndproject_frontend.data.repository.UserRestRepository
 import com.fls.dndproject_frontend.domain.model.User

@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fls.dndproject_frontend.presentation.ui.screens.createAccount.CreateAccountScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.login.LoginScreen
+import com.fls.dndproject_frontend.presentation.ui.screens.myCharacters.MyCharactersScreen
 
 @Composable
 fun NavGraph() {
@@ -16,6 +17,9 @@ fun NavGraph() {
         }
         composable(route = Screen.CreateAccount.route) {
             CreateAccountScreen(navController)
+        }
+        composable(route = Screen.MyCharacters.route ) {
+            MyCharactersScreen(navController)
         }
     }
 }
