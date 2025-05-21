@@ -22,7 +22,7 @@ import com.fls.dndproject_frontend.presentation.navigation.Screen
 import com.fls.dndproject_frontend.presentation.viewmodel.createAccount.CreateAccountViewModel
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class) // Necesario para el Scaffold con SnackbarHost
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccountScreen(
     navController: NavController,

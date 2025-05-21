@@ -14,7 +14,6 @@ class LoginViewModel(
     private val listUsersUseCase: ListUsersUseCase
 ) : ViewModel() {
 
-    // CAMBIO AQUÍ: Ahora tenemos _username en lugar de _email
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
 
@@ -27,7 +26,6 @@ class LoginViewModel(
     private val _loginSuccess = MutableStateFlow(false)
     val loginSuccess: StateFlow<Boolean> = _loginSuccess
 
-    // CAMBIO AQUÍ: Setter para el nombre de usuario
     fun setUsername(username: String) {
         _username.value = username
     }
@@ -44,7 +42,6 @@ class LoginViewModel(
         _snackbarMessage.value = null
         _loginSuccess.value = false
 
-        // Validaciones iniciales (ahora con username)
         if (_username.value.isBlank() || _password.value.isBlank()) {
             _snackbarMessage.value = "Por favor, introduce tu nombre de usuario y contraseña."
             return
@@ -55,7 +52,6 @@ class LoginViewModel(
                 val allUsers = listUsersUseCase.invoke().first()
                 Log.d("LoginViewModel", "Usuarios obtenidos para login: $allUsers")
 
-                // CAMBIO AQUÍ: Buscar el usuario por nombre de usuario
                 val userToLogin = allUsers.firstOrNull { it.username.equals(_username.value, ignoreCase = true) }
 
                 if (userToLogin == null) {
