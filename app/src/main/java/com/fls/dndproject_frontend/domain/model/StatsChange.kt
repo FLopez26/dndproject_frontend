@@ -1,7 +1,7 @@
 package com.fls.dndproject_frontend.domain.model
 
 data class StatsChange(
-    val id: Int = 0,
+    val statsChangeId: Int = 0,
     val strength: Int = 0,
     val dexterity: Int = 0,
     val constitution: Int = 0,

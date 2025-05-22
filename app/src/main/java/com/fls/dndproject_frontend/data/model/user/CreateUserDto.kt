@@ -18,7 +18,7 @@ data class CreateUserDto(
 
     fun toUser(id: Int) =
         User(
-            id = id,
+            userId = id,
             username = username,
             email = email,
             password = password
