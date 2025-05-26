@@ -1,21 +1,21 @@
 package com.fls.dndproject_frontend.data.repository
 
-import com.fls.dndproject_frontend.data.model.abilities.CreateAbilitiesDto
-import com.fls.dndproject_frontend.data.source.remote.AbilitiesServiceClient
-import com.fls.dndproject_frontend.domain.model.Abilities
+import com.fls.dndproject_frontend.data.model.stats.CreateStatsDto
+import com.fls.dndproject_frontend.data.source.remote.StatsServiceClient
+import com.fls.dndproject_frontend.domain.model.Stats
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class AbilitiesRestRepository(private val abilitiesServiceClient: AbilitiesServiceClient) {
+class StatsRestRepository(private val statsServiceClient: StatsServiceClient) {
 
-    fun getAllAbilities(): Flow<List<Abilities>> =
+    fun getAllStats(): Flow<List<Stats>> =
         observeQuery(retryTime = 2000) {
-            abilitiesServiceClient
-                .getAllAbilities()
-                .map { it.toAbilities() }
+            statsServiceClient
+                .getAllStats()
+                .map { it.toStats() } // Assuming a .toStats() extension function on the DTO
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -31,16 +31,18 @@ class AbilitiesRestRepository(private val abilitiesServiceClient: AbilitiesServi
                     emit(newResult)
                     isFirstEmission = false
                 }
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                // Log the exception here if needed for debugging, but suppress for continuous operation
+            }
             delay(retryTime)
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun save(abilities: Abilities) {
-        abilitiesServiceClient.createAbility(CreateAbilitiesDto.fromAbilities(abilities))
+    suspend fun save(stats: Stats) {
+        statsServiceClient.createStats(CreateStatsDto.fromStats(stats))
     }
 
-    suspend fun delete(abilitiesId: Int) {
-        abilitiesServiceClient.deleteAbility(abilitiesId)
+    suspend fun delete(statsId: Int) {
+        statsServiceClient.deleteStats(statsId)
     }
 }

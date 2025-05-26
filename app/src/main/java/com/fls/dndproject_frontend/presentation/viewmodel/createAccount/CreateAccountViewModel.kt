@@ -84,6 +84,11 @@ class CreateAccountViewModel(
         viewModelScope.launch {
             Log.d("CreateAccountViewModel", "Coroutine: Iniciando bloque suspendido de operaciones de BD.")
             try {
+                Log.d("CreateAccountViewModel", "createAccount - Valores de entrada:")
+                Log.d("CreateAccountViewModel", "  Username StateFlow: '${_username.value}'")
+                Log.d("CreateAccountViewModel", "  Email StateFlow:    '${_email.value}'")
+                Log.d("CreateAccountViewModel", "  Password StateFlow: (longitud: ${_password.value.length})")
+                Log.d("CreateAccountViewModel", "  Confirm Password:   (longitud: ${confirmPassword.length})")
                 Log.d("CreateAccountViewModel", "Coroutine: Intentando obtener usuarios existentes con listUsersUseCase.invoke().first()...")
                 val existingUsers = listUsersUseCase.invoke().first()
                 Log.d("CreateAccountViewModel", "Coroutine: Usuarios existentes obtenidos. Cantidad: ${existingUsers.size}. Detalles: $existingUsers")

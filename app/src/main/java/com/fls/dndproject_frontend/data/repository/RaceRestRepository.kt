@@ -1,21 +1,21 @@
 package com.fls.dndproject_frontend.data.repository
 
-import com.fls.dndproject_frontend.data.model.abilities.CreateAbilitiesDto
-import com.fls.dndproject_frontend.data.source.remote.AbilitiesServiceClient
-import com.fls.dndproject_frontend.domain.model.Abilities
+import com.fls.dndproject_frontend.data.model.race.CreateRaceDto
+import com.fls.dndproject_frontend.data.source.remote.RaceServiceClient
+import com.fls.dndproject_frontend.domain.model.Race
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class AbilitiesRestRepository(private val abilitiesServiceClient: AbilitiesServiceClient) {
+class RaceRestRepository(private val raceServiceClient: RaceServiceClient) {
 
-    fun getAllAbilities(): Flow<List<Abilities>> =
+    fun getAllRaces(): Flow<List<Race>> =
         observeQuery(retryTime = 2000) {
-            abilitiesServiceClient
-                .getAllAbilities()
-                .map { it.toAbilities() }
+            raceServiceClient
+                .getAllRaces()
+                .map { it.toRace() } // Assuming a .toRace() extension function on the DTO
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -31,16 +31,18 @@ class AbilitiesRestRepository(private val abilitiesServiceClient: AbilitiesServi
                     emit(newResult)
                     isFirstEmission = false
                 }
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                // Log the exception here if needed for debugging, but suppress for continuous operation
+            }
             delay(retryTime)
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun save(abilities: Abilities) {
-        abilitiesServiceClient.createAbility(CreateAbilitiesDto.fromAbilities(abilities))
+    suspend fun save(race: Race) {
+        raceServiceClient.createRace(CreateRaceDto.fromRace(race))
     }
 
-    suspend fun delete(abilitiesId: Int) {
-        abilitiesServiceClient.deleteAbility(abilitiesId)
+    suspend fun delete(raceId: Int) {
+        raceServiceClient.deleteRace(raceId)
     }
 }
