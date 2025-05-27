@@ -32,11 +32,11 @@ fun LoginScreen(
     navController: NavController,
     loginViewModel: LoginViewModel = koinViewModel()
 ) {
-    // Ahora observamos 'username' en lugar de 'email'
     val username by loginViewModel.username.collectAsState()
     val password by loginViewModel.password.collectAsState()
     val snackbarMessage by loginViewModel.snackbarMessage.collectAsState()
-    val loginSuccess by loginViewModel.loginSuccess.collectAsState()
+    val navigateToHomeWithUserId by loginViewModel.navigateToHomeWithUserId.collectAsState(initial = null)
+
 
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -52,9 +52,9 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(loginSuccess) {
-        if (loginSuccess) {
-            navController.navigate(Screen.MyCharacters.route) {
+    LaunchedEffect(navigateToHomeWithUserId) {
+        navigateToHomeWithUserId?.let { userId ->
+            navController.navigate(Screen.MyCharacters.createRoute(userId)) {
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 launchSingleTop = true
             }
@@ -94,11 +94,10 @@ fun LoginScreen(
                 textAlign = TextAlign.Start
             )
 
-            // CAMBIO AQUÍ: Campo para el Nombre de usuario
             OutlinedTextField(
                 value = username,
-                onValueChange = { loginViewModel.setUsername(it) }, // Actualiza el username del ViewModel
-                label = { Text("Nombre de usuario") }, // Etiqueta del campo
+                onValueChange = { loginViewModel.setUsername(it) },
+                label = { Text("Nombre de usuario") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = outlinedTextFieldColors
             )

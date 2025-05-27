@@ -18,6 +18,27 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
                 .map { it.toCharacters() } // Assuming a .toCharacters() extension function on the DTO
         }
 
+    fun getCharactersByUserId(userId: Int): Flow<List<Characters>> = flow {
+        var lastResult: List<Characters> = emptyList()
+        var isFirstEmission = true
+
+        while (true) {
+            try {
+                val newResult = charactersServiceClient
+                    .getAllCharacters()
+                    .map { it.toCharacters() }
+                    .filter { it.user?.userId == userId }
+
+                if (isFirstEmission || newResult != lastResult) {
+                    lastResult = newResult
+                    emit(newResult)
+                    isFirstEmission = false
+                }
+            } catch (e: Exception) {}
+            delay(2000)
+        }
+    }.flowOn(Dispatchers.IO)
+
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
         var lastResult: List<T> = emptyList()
         var isFirstEmission = true

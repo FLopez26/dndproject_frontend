@@ -13,7 +13,7 @@ interface UserServiceClient {
     suspend fun getUserById(@Path("id") id: Int): UserDto?
 
     @POST("api/users")
-    suspend fun createUser(@Body user: CreateUserDto)
+    suspend fun createUser(@Body user: CreateUserDto): UserDto
 
     @PUT("api/users/{id}")
     suspend fun updateUser(@Path("id") id: Int, @Body user: UserDto): UserDto?

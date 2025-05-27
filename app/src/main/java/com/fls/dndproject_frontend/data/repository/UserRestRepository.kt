@@ -39,8 +39,10 @@ class UserRestRepository(val userServiceClient: UserServiceClient) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun save(user: User) {
-        userServiceClient.createUser(CreateUserDto.fromUser(user))
+    suspend fun save(user: User): User {
+        val createUserDto = CreateUserDto.fromUser(user)
+        val createdUserDto = userServiceClient.createUser(createUserDto)
+        return createdUserDto.toUser()
     }
 
     suspend fun delete(userId: Int) {
