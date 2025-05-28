@@ -6,13 +6,13 @@ import com.fls.dndproject_frontend.data.model.race.RaceDto
 
 data class AbilitiesDto(
     val abilityId: Int,
-    val raceAbilities: RaceDto?,
-    val classAbilities: CharacterClassDto?
+    val race: RaceDto?,
+    val characterClass: CharacterClassDto?
 ) {
     fun toAbilities() =
         Abilities(
             abilityId = abilityId,
-            raceAbilities = raceAbilities?.toRace(),
-            classAbilities = classAbilities?.toCharacterClass()
+            race = race?.toRace(),
+            characterClass = characterClass?.toCharacterClass()
         )
 }

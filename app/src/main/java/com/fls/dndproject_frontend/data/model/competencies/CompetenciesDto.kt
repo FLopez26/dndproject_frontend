@@ -6,13 +6,13 @@ import com.fls.dndproject_frontend.data.model.background.BackgroundDto
 
 data class CompetenciesDto(
     val competencyId: Int,
-    val classCompetencies: CharacterClassDto?,
-    val backgroundCompetencies: BackgroundDto?
+    val characterClass: CharacterClassDto?,
+    val background: BackgroundDto?
 ) {
     fun toCompetencies() =
         Competencies(
             competencyId = competencyId,
-            classCompetencies = classCompetencies?.toCharacterClass(),
-            backgroundCompetencies = backgroundCompetencies?.toBackground()
+            characterClass = characterClass?.toCharacterClass(),
+            background = background?.toBackground()
         )
 }

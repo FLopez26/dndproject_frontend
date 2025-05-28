@@ -6,18 +6,20 @@ import com.fls.dndproject_frontend.data.model.statsChange.StatsChangeDto
 data class RaceDto(
     val raceId: Int,
     val name: String,
-    val selection: Int?,
-    val abilitiesText: String?,
-    val competenciesText: String?,
+    val raceSelection: Int?,
+    val speed: Int?,
+    val abilities: String?,
+    val competencies: String?,
     val statsChange: StatsChangeDto?
 ) {
     fun toRace() =
         Race(
             raceId = raceId,
             name = name,
-            selection = selection,
-            abilitiesText = abilitiesText,
-            competenciesText = competenciesText,
+            raceSelection = raceSelection,
+            speed = speed,
+            abilities = abilities,
+            competencies = competencies,
             statsChange = statsChange?.toStatsChange()
         )
 }

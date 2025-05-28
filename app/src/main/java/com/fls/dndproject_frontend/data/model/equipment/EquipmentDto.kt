@@ -6,13 +6,13 @@ import com.fls.dndproject_frontend.data.model.background.BackgroundDto
 
 data class EquipmentDto(
     val equipmentId: Int,
-    val classEquipment: CharacterClassDto?,
-    val backgroundEquipment: BackgroundDto?
+    val characterClass: CharacterClassDto?,
+    val background: BackgroundDto?
 ) {
     fun toEquipment() =
         Equipment(
             equipmentId = equipmentId,
-            classEquipment = classEquipment?.toCharacterClass(),
-            backgroundEquipment = backgroundEquipment?.toBackground()
+            characterClass = characterClass?.toCharacterClass(),
+            background = background?.toBackground()
         )
 }

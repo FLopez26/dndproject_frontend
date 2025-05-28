@@ -3,14 +3,14 @@ package com.fls.dndproject_frontend.data.model.abilities
 import com.fls.dndproject_frontend.domain.model.Abilities
 
 data class CreateAbilitiesDto(
-    val raceAbilitiesId: Int?,
-    val classAbilitiesId: Int?
+    val raceId: Int?,
+    val characterClassId: Int?
 ) {
     companion object {
         fun fromAbilities(abilities: Abilities) =
             CreateAbilitiesDto(
-                raceAbilitiesId = abilities.raceAbilities?.raceId,
-                classAbilitiesId = abilities.classAbilities?.classId
+                raceId = abilities.race?.raceId,
+                characterClassId = abilities.characterClass?.classId
             )
     }
 }

@@ -65,4 +65,5 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.1")
     implementation("io.insert-koin:koin-androidx-compose:3.4.1")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

@@ -3,14 +3,14 @@ package com.fls.dndproject_frontend.presentation.ui.components
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable // ¡Importa clickable!
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.size // Importado para el tamaño de la imagen
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +55,7 @@ fun MyCharactersCard(
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = "Imagen de ${character.name}",
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(160.dp)
                             .align(Alignment.CenterHorizontally),
                         contentScale = ContentScale.Crop
                     )
@@ -70,32 +70,33 @@ fun MyCharactersCard(
 
             Text(
                 text = character.name,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Raza: ${character.characterRace?.name ?: "Desconocida"}",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "Raza: ${character.characterRace?.name}",
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = "Clase: ${character.characterClass?.name ?: "Desconocida"}",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "Clase: ${character.characterClass?.name}",
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
 
+//Imagen que se mostrará si el personaje no tiene una asociada
 @Composable
 private fun PlaceholderImage(text: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .size(120.dp)
+            .size(160.dp) // Also increased placeholder image size
             .background(Color.LightGray)
             .padding(8.dp),
         verticalArrangement = Arrangement.Center,

@@ -4,8 +4,8 @@ data class CharacterClass(
     val classId: Int = 0,
     val name: String,
     val selection: Int?,
-    val hitPointsDice: String?,
-    val equipmentText: String?,
-    val competenciesText: String?,
-    val abilitiesText: String?
+    val diceHitPoints: String?,
+    val equipment: String?,
+    val competencies: String?,
+    val abilities: String?
 )

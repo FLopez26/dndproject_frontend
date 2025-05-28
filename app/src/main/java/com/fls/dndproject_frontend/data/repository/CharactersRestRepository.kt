@@ -1,5 +1,6 @@
 package com.fls.dndproject_frontend.data.repository
 
+import com.fls.dndproject_frontend.data.model.characters.CharactersDto
 import com.fls.dndproject_frontend.data.model.characters.CreateCharactersDto
 import com.fls.dndproject_frontend.data.source.remote.CharactersServiceClient
 import com.fls.dndproject_frontend.domain.model.Characters
@@ -8,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class CharactersRestRepository(private val charactersServiceClient: CharactersServiceClient) {
 
@@ -15,7 +17,21 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
         observeQuery(retryTime = 2000) {
             charactersServiceClient
                 .getAllCharacters()
-                .map { it.toCharacters() } // Assuming a .toCharacters() extension function on the DTO
+                .map { it.toCharacters() }
+        }
+
+    suspend fun getCharacterById(characterId: Int): Result<Characters> =
+        withContext(Dispatchers.IO) {
+            try {
+                val characterDto = charactersServiceClient.getCharacterById(characterId)
+                if (characterDto != null) {
+                    Result.success(characterDto.toCharacters())
+                } else {
+                    Result.failure(NoSuchElementException("Personaje con id $characterId no encontrado"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
 
     fun getCharactersByUserId(userId: Int): Flow<List<Characters>> = flow {
@@ -53,7 +69,6 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
             }
             delay(retryTime)
         }
@@ -66,4 +81,5 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
     suspend fun delete(characterId: Int) {
         charactersServiceClient.deleteCharacter(characterId)
     }
+
 }

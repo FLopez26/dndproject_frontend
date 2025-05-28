@@ -4,15 +4,15 @@ import com.fls.dndproject_frontend.domain.model.Background
 
 data class CreateBackgroundDto(
     val name: String,
-    val equipmentText: String?,
-    val competenciesText: String?
+    val equipment: String?,
+    val competencies: String?
 ) {
     companion object {
         fun fromBackground(background: Background) =
             CreateBackgroundDto(
                 name = background.name,
-                equipmentText = background.equipmentText,
-                competenciesText = background.competenciesText
+                equipment = background.equipment,
+                competencies = background.competencies
             )
     }
 
@@ -20,7 +20,7 @@ data class CreateBackgroundDto(
         Background(
             backgroundId = id,
             name = name,
-            equipmentText = equipmentText,
-            competenciesText = competenciesText
+            equipment = equipment,
+            competencies = competencies
         )
 }

@@ -5,14 +5,14 @@ import com.fls.dndproject_frontend.domain.model.Background
 data class BackgroundDto(
     val backgroundId: Int,
     val name: String,
-    val equipmentText: String?,
-    val competenciesText: String?
+    val equipment: String?,
+    val competencies: String?
 ) {
     fun toBackground() =
         Background(
             backgroundId = backgroundId,
             name = name,
-            equipmentText = equipmentText,
-            competenciesText = competenciesText
+            equipment = equipment,
+            competencies = competencies
         )
 }

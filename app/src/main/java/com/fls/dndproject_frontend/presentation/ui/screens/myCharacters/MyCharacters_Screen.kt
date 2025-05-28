@@ -2,7 +2,6 @@ package com.fls.dndproject_frontend.presentation.ui.screens.myCharacters
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,41 +45,20 @@ fun MyCharactersScreen(
     userId: Int?,
     myCharactersViewModel: MyCharactersViewModel = koinViewModel()
 ) {
-    val usernameDisplay by myCharactersViewModel.usernameDisplay.collectAsState()
     val characters by myCharactersViewModel.characters.collectAsState()
-    val uiMessage by myCharactersViewModel.uiMessage.collectAsState()
     val hasCharacters by myCharactersViewModel.hasCharacters.collectAsState()
-
-    // No se necesita si no usas SnackBar
-    // val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(userId) {
         myCharactersViewModel.loadUserDataAndCharacters(userId)
     }
-
-    // No se necesita si no usas SnackBar
-    /*
-    LaunchedEffect(uiMessage) {
-        uiMessage?.let {
-            snackbarHostState.showSnackbar(
-                message = it,
-                duration = SnackbarDuration.Short
-            )
-            myCharactersViewModel.clearUiMessage()
-        }
-    }
-    */
-
     Scaffold(
-        // No se necesita si no usas SnackBar
-        // snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Mis Personajes",
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = Color.White
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -88,18 +66,15 @@ fun MyCharactersScreen(
                 ),
                 actions = {
                     IconButton(onClick = {
-                        // TODO: Aquí pondrás la ruta a la pantalla de creación de personaje
-                        // Ejemplo:
-                        // navController.navigate(Screen.CreateNewCharacter.route)
-                        // Para este ejemplo, volvemos al login, cámbialo por tu ruta real.
-                        navController.navigate(Screen.Login.route) { // Esto es un placeholder, cámbialo
+                        // TODO: ruta
+                        navController.navigate(Screen.Login.route) {
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Add,
-                            contentDescription = "Añadir nuevo personaje",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = "newCharacter",
+                            tint = Color.White
                         )
                     }
                 }
@@ -110,38 +85,28 @@ fun MyCharactersScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 20.dp), // Ajusta el padding horizontal si es necesario para el grid
+                .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            // Deja el verticalArrangement como Top para que el grid se alinee arriba
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(20.dp)) // Espacio superior
-
-            Text(
-                text = "Bienvenido, ${usernameDisplay ?: "..."}",
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-
             when (hasCharacters) {
                 true -> {
-                    Text(
-                        text = "Aquí están tus valiosos compañeros:",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    // ¡NUEVO: Usamos LazyVerticalGrid para la cuadrícula de 2 columnas!
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(2), // ¡Dos columnas!
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp), // Espacio horizontal entre tarjetas
-                        verticalArrangement = Arrangement.spacedBy(16.dp), // Espacio vertical entre tarjetas
-                        contentPadding = innerPadding // Aplica el padding del Scaffold al contenido del grid
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(characters) { character ->
                             MyCharactersCard(
                                 character = character,
-                                onClick = { //TODO ruta
+                                onClick = { clickedCharacter ->
+                                    clickedCharacter.characterId?.let { id ->
+                                        navController.navigate(Screen.CharacterInfo.createRoute(id))
+                                    }
                                 }
                             )
                         }
@@ -151,7 +116,7 @@ fun MyCharactersScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f), // Hace que ocupe el espacio disponible
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -162,15 +127,15 @@ fun MyCharactersScreen(
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         Text(
-                            text = "Crea tu primer héroe y comienza tu aventura.",
+                            text = "Crea el primero y comienza tu aventura.",
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(bottom = 32.dp)
                         )
                         Button(
                             onClick = {
-                                // TODO: Aquí pondrás la ruta a la pantalla de creación de personaje
-                                navController.navigate(Screen.Login.route) { // Placeholder
+                                // TODO: ruta
+                                navController.navigate(Screen.Login.route) {
                                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                 }
                             },
@@ -183,37 +148,22 @@ fun MyCharactersScreen(
                         }
                     }
                 }
+                //En caso de error y durante la carga de datos
                 null -> {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f), // Hace que ocupe el espacio disponible
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                         Text(
-                            text = uiMessage ?: "Cargando personajes...",
+                            text = "Cargando . . .",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .height(50.dp),
-                colors = AppStyles.buttonColors
-            ) {
-                Text("Volver al Login")
             }
         }
     }

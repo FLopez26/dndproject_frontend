@@ -5,20 +5,20 @@ import com.fls.dndproject_frontend.domain.model.CharacterClass
 data class CreateCharacterClassDto(
     val name: String,
     val selection: Int?,
-    val hitPointsDice: String?,
-    val equipmentText: String?,
-    val competenciesText: String?,
-    val abilitiesText: String?
+    val diceHitPoints: String?,
+    val equipment: String?,
+    val competencies: String?,
+    val abilities: String?
 ) {
     companion object {
         fun fromCharacterClass(characterClass: CharacterClass) =
             CreateCharacterClassDto(
                 name = characterClass.name,
                 selection = characterClass.selection,
-                hitPointsDice = characterClass.hitPointsDice,
-                equipmentText = characterClass.equipmentText,
-                competenciesText = characterClass.competenciesText,
-                abilitiesText = characterClass.abilitiesText
+                diceHitPoints = characterClass.diceHitPoints,
+                equipment = characterClass.equipment,
+                competencies = characterClass.competencies,
+                abilities = characterClass.abilities
             )
     }
 
@@ -27,9 +27,9 @@ data class CreateCharacterClassDto(
             classId = id,
             name = name,
             selection = selection,
-            hitPointsDice = hitPointsDice,
-            equipmentText = equipmentText,
-            competenciesText = competenciesText,
-            abilitiesText = abilitiesText
+            diceHitPoints = diceHitPoints,
+            equipment = equipment,
+            competencies = competencies,
+            abilities = abilities
         )
 }

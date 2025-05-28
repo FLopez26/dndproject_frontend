@@ -5,18 +5,20 @@ import com.fls.dndproject_frontend.data.model.statsChange.CreateStatsChangeDto
 
 data class CreateRaceDto(
     val name: String,
-    val selection: Int?,
-    val abilitiesText: String?,
-    val competenciesText: String?,
+    val raceSelection: Int?,
+    val speed: Int?,
+    val abilities: String?,
+    val competencies: String?,
     val statsChange: CreateStatsChangeDto?
 ) {
     companion object {
         fun fromRace(race: Race) =
             CreateRaceDto(
                 name = race.name,
-                selection = race.selection,
-                abilitiesText = race.abilitiesText,
-                competenciesText = race.competenciesText,
+                raceSelection = race.raceSelection,
+                speed = race.speed,
+                abilities = race.abilities,
+                competencies = race.competencies,
                 statsChange = race.statsChange?.let { CreateStatsChangeDto.fromStatsChange(it) }
             )
     }
@@ -25,9 +27,10 @@ data class CreateRaceDto(
         Race(
             raceId = id,
             name = name,
-            selection = selection,
-            abilitiesText = abilitiesText,
-            competenciesText = competenciesText,
+            raceSelection = raceSelection,
+            speed = speed,
+            abilities = abilities,
+            competencies = competencies,
             statsChange = statsChange?.toStatsChange(0)
         )
 }
