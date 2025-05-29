@@ -32,8 +32,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.dndproject_frontend.ui.theme.AppStyles
+import com.fls.dndproject_frontend.domain.model.Characters
 import com.fls.dndproject_frontend.presentation.navigation.Screen
+import com.fls.dndproject_frontend.presentation.ui.components.CustomNavigationBar
 import com.fls.dndproject_frontend.presentation.viewmodel.myCharacters.MyCharactersViewModel
 import com.fls.dndproject_frontend.presentation.ui.components.MyCharactersCard
 import org.koin.androidx.compose.koinViewModel
@@ -79,6 +82,41 @@ fun MyCharactersScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            CustomNavigationBar(
+                currentRoute = currentRoute,
+                onTabClick = { routeFromCustomNavigationBar ->
+                    userId?.let { id ->
+                        val targetRoute = when (routeFromCustomNavigationBar) {
+                            Screen.MyCharacters.route -> Screen.MyCharacters.createRoute(id)
+                            Screen.Forum.route -> Screen.Forum.createRoute(id)
+                            Screen.SavedCharacters.route -> Screen.SavedCharacters.createRoute(id)
+                            Screen.Profile.route -> Screen.Profile.createRoute(id)
+                            else -> {
+                                println("DEBUG: CustomNavigationBar passed an unexpected route: $routeFromCustomNavigationBar")
+                                routeFromCustomNavigationBar
+                            }
+                        }
+                        println("DEBUG: Navigating to targetRoute: $targetRoute with userId: $id")
+                        navController.navigate(targetRoute) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    } ?: run {
+                        println("Error: userId es null en MyCharactersScreen. Redirigiendo a Login.")
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                        }
+                    }
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -103,7 +141,7 @@ fun MyCharactersScreen(
                         items(characters) { character ->
                             MyCharactersCard(
                                 character = character,
-                                onClick = { clickedCharacter ->
+                                onClick = { clickedCharacter: Characters ->
                                     clickedCharacter.characterId?.let { id ->
                                         navController.navigate(Screen.CharacterInfo.createRoute(id))
                                     }

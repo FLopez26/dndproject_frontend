@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size // Importado para el tamaño de la imagen
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -96,7 +96,7 @@ fun MyCharactersCard(
 private fun PlaceholderImage(text: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .size(160.dp) // Also increased placeholder image size
+            .size(160.dp)
             .background(Color.LightGray)
             .padding(8.dp),
         verticalArrangement = Arrangement.Center,
