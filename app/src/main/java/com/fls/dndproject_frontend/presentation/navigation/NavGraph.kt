@@ -33,10 +33,19 @@ fun NavGraph() {
         }
         composable(
             route = Screen.CharacterInfo.route,
-            arguments = listOf(navArgument("characterId") { type = NavType.IntType })
+            arguments = listOf(
+                navArgument("characterId") { type = NavType.IntType },
+                navArgument("userId") { type = NavType.IntType }
+            )
         ) { backStackEntry ->
-            val characterId = backStackEntry.arguments?.getInt("characterId")
-            CharacterInfo_Screen(navController = navController, characterId = characterId)
+            val characterId = backStackEntry.arguments!!.getInt("characterId")
+            val userId = backStackEntry.arguments!!.getInt("userId")
+
+            CharacterInfo_Screen(
+                navController = navController,
+                characterId = characterId,
+                userId = userId
+            )
         }
         composable(
             route = Screen.Forum.route,

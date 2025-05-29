@@ -141,9 +141,11 @@ fun MyCharactersScreen(
                         items(characters) { character ->
                             MyCharactersCard(
                                 character = character,
-                                onClick = { clickedCharacter: Characters ->
+                                onClick = { clickedCharacter ->
                                     clickedCharacter.characterId?.let { id ->
-                                        navController.navigate(Screen.CharacterInfo.createRoute(id))
+                                        userId?.let { loggedInUserId ->
+                                            navController.navigate(Screen.CharacterInfo.createRoute(id, loggedInUserId))
+                                        }
                                     }
                                 }
                             )

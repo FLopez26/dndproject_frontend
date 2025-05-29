@@ -132,7 +132,9 @@ fun ForumScreen(
                                 character = character,
                                 onClick = { clickedCharacter ->
                                     clickedCharacter.characterId?.let { id ->
-                                        navController.navigate(Screen.CharacterInfo.createRoute(id))
+                                        userId?.let { loggedInUserId ->
+                                            navController.navigate(Screen.CharacterInfo.createRoute(id, loggedInUserId))
+                                        }
                                     }
                                 }
                             )

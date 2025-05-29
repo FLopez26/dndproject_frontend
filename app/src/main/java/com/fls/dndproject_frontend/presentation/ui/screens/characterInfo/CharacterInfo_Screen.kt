@@ -42,12 +42,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.draw.clip
 import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Public
-import androidx.compose.material.icons.filled.PublicOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,6 +58,7 @@ import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColor
 fun CharacterInfo_Screen(
     navController: NavController,
     characterId: Int?,
+    userId: Int?,
     characterInfoViewModel: CharacterInfoViewModel = koinViewModel()
 ) {
     val character by characterInfoViewModel.character.collectAsState()
@@ -94,15 +94,23 @@ fun CharacterInfo_Screen(
                     }
                 },
                 actions = {
-                    character?.let {
-                        IconButton(onClick = {
-                            showPublicDialog = true
-                        }) {
-                            Icon(
-                                imageVector = if (character?.isPublic == true) Icons.Default.Public else Icons.Default.PublicOff,
-                                contentDescription = if (character?.isPublic == true) "Hacer privado" else "Hacer público",
-                                tint = Color.White
-                            )
+                    character.let { character ->
+                        val isOwner = character?.user?.userId == userId
+
+                        if (isOwner) {
+                            val publicityIcon = if (character?.isPublic == true) {
+                                Icons.Filled.Public
+                            } else {
+                                Icons.Filled.Lock
+                            }
+
+                            IconButton(onClick = { showPublicDialog = true }) {
+                                Icon(
+                                    imageVector = publicityIcon,
+                                    contentDescription = if (character?.isPublic == true) "Personaje Público" else "Personaje Privado",
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }
