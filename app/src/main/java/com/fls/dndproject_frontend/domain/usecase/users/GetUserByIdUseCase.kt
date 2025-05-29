@@ -5,4 +5,7 @@ import com.fls.dndproject_frontend.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 class GetUserByIdUseCase(private val userRestRepository: UserRestRepository) {
+    operator fun invoke(userId: Int): Flow<User?> {
+        return userRestRepository.getUserById(userId)
+    }
 }

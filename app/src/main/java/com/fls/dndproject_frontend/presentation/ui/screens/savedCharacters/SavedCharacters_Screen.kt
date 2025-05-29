@@ -1,16 +1,18 @@
 package com.fls.dndproject_frontend.presentation.ui.screens.savedCharacters
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,15 +23,20 @@ import com.fls.dndproject_frontend.presentation.ui.components.CustomNavigationBa
 @Composable
 fun SavedCharactersScreen(
     navController: NavController,
-    userId: Int? // Recibe el userId
+    userId: Int?
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Personajes Guardados") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(185, 0, 0),
-                    titleContentColor = Color.White
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Personajes guardados",
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(185, 0, 0)
                 )
             )
         },

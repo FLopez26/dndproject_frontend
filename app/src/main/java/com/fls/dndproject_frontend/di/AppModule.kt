@@ -24,11 +24,13 @@ import com.fls.dndproject_frontend.domain.usecase.characters.CharactersInfoUseCa
 import com.fls.dndproject_frontend.domain.usecase.characters.ListCharactersByUserUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.UpdateCharacterUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.CreateAccountUseCase
+import com.fls.dndproject_frontend.domain.usecase.users.GetUserByIdUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.ListUsersUseCase
 import com.fls.dndproject_frontend.presentation.viewmodel.characterInfo.CharacterInfoViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.createAccount.CreateAccountViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.login.LoginViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.myCharacters.MyCharactersViewModel
+import com.fls.dndproject_frontend.presentation.viewmodel.profile.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -62,9 +64,11 @@ val appModule = module {
     factory { ListCharactersByUserUseCase(get()) }
     factory { CharactersInfoUseCase(get()) }
     factory { UpdateCharacterUseCase(get()) }
+    factory { GetUserByIdUseCase(get()) }
 
     viewModel { CreateAccountViewModel(get(),get())}
     viewModel { LoginViewModel(get()) }
     viewModel { MyCharactersViewModel(get(), get()) }
     viewModel { CharacterInfoViewModel(get(), get()) }
+    viewModel { ProfileViewModel(get()) }
 }

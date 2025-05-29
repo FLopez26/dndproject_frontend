@@ -19,6 +19,16 @@ class UserRestRepository(val userServiceClient: UserServiceClient) {
                 .map { it.toUser() }
         }
 
+    fun getUserById(userId: Int): Flow<User?> = flow {
+        try {
+            val userDto = userServiceClient.getUserById(userId)
+            emit(userDto?.toUser())
+        } catch (e: Exception) {
+            Log.e("UserRestRepository", "Error fetching user by ID $userId: ${e.message}", e)
+            emit(null)
+        }
+    }.flowOn(Dispatchers.IO)
+
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
         var lastResult: List<T> = emptyList()
         var isFirstEmission = true
