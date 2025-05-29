@@ -13,6 +13,7 @@ import com.fls.dndproject_frontend.presentation.ui.screens.login.LoginScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.myCharacters.MyCharactersScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.profile.ProfileScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.savedCharacters.SavedCharactersScreen
+import com.fls.dndproject_frontend.presentation.ui.screens.wizard.Wizard1_Screen
 
 @Composable
 fun NavGraph() {
@@ -69,6 +70,14 @@ fun NavGraph() {
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getInt("userId")
             ProfileScreen(navController = navController, userId = userId)
+        }
+
+        composable(
+            route = Screen.Wizard1.route,
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId")
+            Wizard1_Screen(navController = navController, userId = userId)
         }
     }
 }

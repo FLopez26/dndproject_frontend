@@ -33,6 +33,7 @@ import com.fls.dndproject_frontend.presentation.viewmodel.forum.ForumViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.login.LoginViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.myCharacters.MyCharactersViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.profile.ProfileViewModel
+import com.fls.dndproject_frontend.presentation.viewmodel.wizard.Wizard1ViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -75,4 +76,5 @@ val appModule = module {
     viewModel { CharacterInfoViewModel(get(), get()) }
     viewModel { ProfileViewModel(get()) }
     viewModel { ForumViewModel(get()) }
+    viewModel { Wizard1ViewModel() }
 }

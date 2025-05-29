@@ -69,10 +69,7 @@ fun MyCharactersScreen(
                 ),
                 actions = {
                     IconButton(onClick = {
-                        // TODO: ruta
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                        }
+                        navController.navigate(Screen.Wizard1.createRoute(userId ?: 0))
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Add,
