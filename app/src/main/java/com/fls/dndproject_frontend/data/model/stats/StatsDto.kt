@@ -26,4 +26,19 @@ data class StatsDto(
             hitPoints = hitPoints,
             statsChange = statsChange?.toStatsChange()
         )
+    companion object {
+        fun fromStats(stats: Stats): StatsDto {
+            return StatsDto(
+                statsId = stats.statsId,
+                strength = stats.strength,
+                dexterity = stats.dexterity,
+                constitution = stats.constitution,
+                intelligence = stats.intelligence,
+                wisdom = stats.wisdom,
+                charisma = stats.charisma,
+                hitPoints = stats.hitPoints,
+                statsChange = stats.statsChange?.let { StatsChangeDto.fromStatsChange(it) }
+            )
+        }
+    }
 }

@@ -22,6 +22,7 @@ import com.fls.dndproject_frontend.data.source.remote.StatsServiceClient
 import com.fls.dndproject_frontend.data.source.remote.UserServiceClient
 import com.fls.dndproject_frontend.domain.usecase.characters.CharactersInfoUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.ListCharactersByUserUseCase
+import com.fls.dndproject_frontend.domain.usecase.characters.UpdateCharacterUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.CreateAccountUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.ListUsersUseCase
 import com.fls.dndproject_frontend.presentation.viewmodel.characterInfo.CharacterInfoViewModel
@@ -60,9 +61,10 @@ val appModule = module {
     factory { ListUsersUseCase(get()) }
     factory { ListCharactersByUserUseCase(get()) }
     factory { CharactersInfoUseCase(get()) }
+    factory { UpdateCharacterUseCase(get()) }
 
     viewModel { CreateAccountViewModel(get(),get())}
     viewModel { LoginViewModel(get()) }
     viewModel { MyCharactersViewModel(get(), get()) }
-    viewModel { CharacterInfoViewModel(get()) }
+    viewModel { CharacterInfoViewModel(get(), get()) }
 }

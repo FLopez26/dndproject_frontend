@@ -15,4 +15,14 @@ data class EquipmentDto(
             characterClass = characterClass?.toCharacterClass(),
             background = background?.toBackground()
         )
+
+    companion object {
+        fun fromEquipment(equipment: Equipment): EquipmentDto {
+            return EquipmentDto(
+                equipmentId = equipment.equipmentId,
+                characterClass = equipment.characterClass?.let { CharacterClassDto.fromCharacterClass(it) },
+                background = equipment.background?.let { BackgroundDto.fromBackground(it) }
+            )
+        }
+    }
 }

@@ -23,4 +23,18 @@ data class StatsChangeDto(
             charisma = charisma,
             hitPoints = hitPoints
         )
+    companion object {
+        fun fromStatsChange(statsChange: StatsChange): StatsChangeDto {
+            return StatsChangeDto(
+                statsChangeId = statsChange.statsChangeId,
+                strength = statsChange.strength,
+                dexterity = statsChange.dexterity,
+                constitution = statsChange.constitution,
+                intelligence = statsChange.intelligence,
+                wisdom = statsChange.wisdom,
+                charisma = statsChange.charisma,
+                hitPoints = statsChange.hitPoints
+            )
+        }
+    }
 }

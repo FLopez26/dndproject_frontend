@@ -15,4 +15,15 @@ data class UserDto(
             email = email,
             password = password
         )
+
+    companion object {
+        fun fromUser(user: User): UserDto {
+            return UserDto(
+                userId = user.userId ?: 0,
+                username = user.username,
+                email = user.email,
+                password = user.password
+            )
+        }
+    }
 }

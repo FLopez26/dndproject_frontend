@@ -15,4 +15,14 @@ data class AbilitiesDto(
             race = race?.toRace(),
             characterClass = characterClass?.toCharacterClass()
         )
+
+    companion object {
+        fun fromAbilities(abilities: Abilities): AbilitiesDto {
+            return AbilitiesDto(
+                abilityId = abilities.abilityId,
+                race = abilities.race?.let { RaceDto.fromRace(it) },
+                characterClass = abilities.characterClass?.let { CharacterClassDto.fromCharacterClass(it) }
+            )
+        }
+    }
 }

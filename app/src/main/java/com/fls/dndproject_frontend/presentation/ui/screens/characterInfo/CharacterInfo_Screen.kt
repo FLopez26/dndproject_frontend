@@ -42,7 +42,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.draw.clip
 import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.PublicOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 
@@ -54,6 +62,7 @@ fun CharacterInfo_Screen(
     characterInfoViewModel: CharacterInfoViewModel = koinViewModel()
 ) {
     val character by characterInfoViewModel.character.collectAsState()
+    var showPublicDialog  by remember { mutableStateOf(false) }
 
     LaunchedEffect(characterId) {
         characterId?.let { id ->
@@ -82,6 +91,19 @@ fun CharacterInfo_Screen(
                             contentDescription = "Return",
                             tint = Color.White
                         )
+                    }
+                },
+                actions = {
+                    character?.let {
+                        IconButton(onClick = {
+                            showPublicDialog = true
+                        }) {
+                            Icon(
+                                imageVector = if (character?.isPublic == true) Icons.Default.Public else Icons.Default.PublicOff,
+                                contentDescription = if (character?.isPublic == true) "Hacer privado" else "Hacer público",
+                                tint = Color.White
+                            )
+                        }
                     }
                 }
 
@@ -347,6 +369,43 @@ fun CharacterInfo_Screen(
                 }
             }
         }
+    }
+    if (showPublicDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showPublicDialog = false
+            },
+            title = {
+                Text(text = if (character?.isPublic == true) "¿Hacer personaje privado?" else "¿Hacer personaje público?")
+            },
+            text = {
+                Text(
+                    text = if (character?.isPublic == true)
+                        "Al hacer tu personaje privado, dejará de ser visible para otros usuarios."
+                    else
+                        "Al hacer tu personaje público, será visible para otros usuarios en la aplicación."
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showPublicDialog = false
+                        characterInfoViewModel.updateCharacter()
+                    }
+                ) {
+                    Text(text = if (character?.isPublic == true) "Hacer privado" else "Hacer público")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showPublicDialog = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 

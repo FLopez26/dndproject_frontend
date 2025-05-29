@@ -49,4 +49,28 @@ data class CharactersDto(
             isPublic = isPublic,
             user = user?.toUser()
         )
+
+    companion object {
+        fun fromCharacters(character: Characters): CharactersDto {
+            return CharactersDto(
+                characterId = character.characterId ?: 0,
+                name = character.name,
+                description = character.description,
+                personalityTraits = character.personalityTraits,
+                ideals = character.ideals,
+                bonds = character.bonds,
+                flaws = character.flaws,
+                stats = character.stats?.let { StatsDto.fromStats(it) },
+                characterRace = character.characterRace?.let { RaceDto.fromRace(it) },
+                characterClass = character.characterClass?.let { CharacterClassDto.fromCharacterClass(it) },
+                background = character.background?.let { BackgroundDto.fromBackground(it) },
+                abilities = character.abilities?.let { AbilitiesDto.fromAbilities(it) },
+                equipment = character.equipment?.let { EquipmentDto.fromEquipment(it) },
+                competencies = character.competencies?.let { CompetenciesDto.fromCompetencies(it) },
+                image = character.image,
+                isPublic = character.isPublic,
+                user = character.user?.let { UserDto.fromUser(it) }
+            )
+        }
+    }
 }

@@ -21,4 +21,17 @@ data class CharacterClassDto(
             competencies = competencies,
             abilities = abilities
         )
+    companion object {
+        fun fromCharacterClass(characterClass: CharacterClass): CharacterClassDto {
+            return CharacterClassDto(
+                classId = characterClass.classId,
+                name = characterClass.name,
+                selection = characterClass.selection,
+                diceHitPoints = characterClass.diceHitPoints,
+                equipment = characterClass.equipment,
+                competencies = characterClass.competencies,
+                abilities = characterClass.abilities
+            )
+        }
+    }
 }

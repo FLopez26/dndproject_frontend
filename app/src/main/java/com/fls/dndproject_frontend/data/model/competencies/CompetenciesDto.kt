@@ -15,4 +15,14 @@ data class CompetenciesDto(
             characterClass = characterClass?.toCharacterClass(),
             background = background?.toBackground()
         )
+
+    companion object {
+        fun fromCompetencies(competencies: Competencies): CompetenciesDto {
+            return CompetenciesDto(
+                competencyId = competencies.competencyId,
+                characterClass = competencies.characterClass?.let { CharacterClassDto.fromCharacterClass(it) },
+                background = competencies.background?.let { BackgroundDto.fromBackground(it) }
+            )
+        }
+    }
 }

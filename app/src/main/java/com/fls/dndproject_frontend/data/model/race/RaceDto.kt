@@ -22,4 +22,18 @@ data class RaceDto(
             competencies = competencies,
             statsChange = statsChange?.toStatsChange()
         )
+
+    companion object {
+        fun fromRace(race: Race): RaceDto {
+            return RaceDto(
+                raceId = race.raceId,
+                name = race.name,
+                raceSelection = race.raceSelection,
+                speed = race.speed,
+                abilities = race.abilities,
+                competencies = race.competencies,
+                statsChange = race.statsChange?.let { StatsChangeDto.fromStatsChange(it) }
+            )
+        }
+    }
 }

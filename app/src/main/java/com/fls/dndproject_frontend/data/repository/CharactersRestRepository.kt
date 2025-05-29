@@ -82,4 +82,26 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
         charactersServiceClient.deleteCharacter(characterId)
     }
 
+    suspend fun updateCharacter(characterId: Int, character: Characters): Result<Characters> =
+        withContext(Dispatchers.IO) {
+            try {
+                // Mapear el modelo de dominio 'Characters' a un DTO 'CharactersDto'
+                // para enviarlo al servicio. Asumo que tienes una función de extensión o un mapper
+                // como 'CharactersDto.fromCharacters(character)' que ya existe.
+                val characterDtoToUpdate = CharactersDto.fromCharacters(character) // <-- Asegúrate de que este mapper existe
+
+                // Llamar al servicio para realizar la actualización
+                val updatedCharacterDto = charactersServiceClient.updateCharacter(characterId, characterDtoToUpdate)
+
+                // Mapear el DTO de respuesta de vuelta al modelo de dominio 'Characters'
+                if (updatedCharacterDto != null) {
+                    Result.success(updatedCharacterDto.toCharacters()) // <-- Asegúrate de que este mapper existe
+                } else {
+                    Result.failure(IllegalStateException("La actualización del personaje retornó nulo."))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
 }

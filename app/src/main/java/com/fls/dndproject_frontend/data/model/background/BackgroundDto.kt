@@ -15,4 +15,14 @@ data class BackgroundDto(
             equipment = equipment,
             competencies = competencies
         )
+    companion object {
+        fun fromBackground(background: Background): BackgroundDto {
+            return BackgroundDto(
+                backgroundId = background.backgroundId,
+                name = background.name,
+                equipment = background.equipment,
+                competencies = background.competencies
+            )
+        }
+    }
 }

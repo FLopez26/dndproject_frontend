@@ -10,6 +10,16 @@ data class CreateCharacterClassDto(
     val competencies: String?,
     val abilities: String?
 ) {
+    fun toCharacterClass(id: Int) =
+        CharacterClass(
+            classId = id,
+            name = name,
+            selection = selection,
+            diceHitPoints = diceHitPoints,
+            equipment = equipment,
+            competencies = competencies,
+            abilities = abilities
+        )
     companion object {
         fun fromCharacterClass(characterClass: CharacterClass) =
             CreateCharacterClassDto(
@@ -21,15 +31,4 @@ data class CreateCharacterClassDto(
                 abilities = characterClass.abilities
             )
     }
-
-    fun toCharacterClass(id: Int) =
-        CharacterClass(
-            classId = id,
-            name = name,
-            selection = selection,
-            diceHitPoints = diceHitPoints,
-            equipment = equipment,
-            competencies = competencies,
-            abilities = abilities
-        )
 }
