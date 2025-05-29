@@ -6,18 +6,18 @@ import retrofit2.http.*
 
 interface CharacterClassServiceClient {
 
-    @GET("api/classes")
+    @GET("api/character-classes")
     suspend fun getAllCharacterClasses(): List<CharacterClassDto>
 
-    @GET("api/classes/{id}")
+    @GET("api/character-classes/{id}")
     suspend fun getCharacterClassById(@Path("id") id: Int): CharacterClassDto?
 
-    @POST("api/classes")
+    @POST("api/character-classes")
     suspend fun createCharacterClass(@Body characterClass: CreateCharacterClassDto): CharacterClassDto
 
-    @PUT("api/classes/{id}")
+    @PUT("api/character-classes/{id}")
     suspend fun updateCharacterClass(@Path("id") id: Int, @Body characterClass: CharacterClassDto): CharacterClassDto?
 
-    @DELETE("api/classes/{id}")
+    @DELETE("api/character-classes/{id}")
     suspend fun deleteCharacterClass(@Path("id") id: Int)
 }

@@ -171,10 +171,7 @@ fun MyCharactersScreen(
                         )
                         Button(
                             onClick = {
-                                // TODO: ruta
-                                navController.navigate(Screen.Login.route) {
-                                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                                }
+                                navController.navigate(Screen.Wizard1.createRoute(userId ?: 0))
                             },
                             modifier = Modifier
                                 .fillMaxWidth(0.7f)

@@ -20,10 +20,13 @@ import com.fls.dndproject_frontend.data.source.remote.RaceServiceClient
 import com.fls.dndproject_frontend.data.source.remote.StatsChangeServiceClient
 import com.fls.dndproject_frontend.data.source.remote.StatsServiceClient
 import com.fls.dndproject_frontend.data.source.remote.UserServiceClient
+import com.fls.dndproject_frontend.domain.usecase.background.GetAllBackgroundsUseCase
+import com.fls.dndproject_frontend.domain.usecase.characterClass.GetAllCharacterClassesUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.CharactersInfoUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.GetAllCharactersUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.ListCharactersByUserUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.UpdateCharacterUseCase
+import com.fls.dndproject_frontend.domain.usecase.race.GetAllRacesUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.CreateAccountUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.GetUserByIdUseCase
 import com.fls.dndproject_frontend.domain.usecase.users.ListUsersUseCase
@@ -34,6 +37,7 @@ import com.fls.dndproject_frontend.presentation.viewmodel.login.LoginViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.myCharacters.MyCharactersViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.profile.ProfileViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.wizard.Wizard1ViewModel
+import com.fls.dndproject_frontend.presentation.viewmodel.wizard.Wizard2ViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -69,6 +73,9 @@ val appModule = module {
     factory { UpdateCharacterUseCase(get()) }
     factory { GetUserByIdUseCase(get()) }
     factory { GetAllCharactersUseCase(get()) }
+    factory { GetAllBackgroundsUseCase(get()) }
+    factory { GetAllCharacterClassesUseCase(get()) }
+    factory { GetAllRacesUseCase(get()) }
 
     viewModel { CreateAccountViewModel(get(),get())}
     viewModel { LoginViewModel(get()) }
@@ -77,4 +84,5 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { ForumViewModel(get()) }
     viewModel { Wizard1ViewModel() }
+    viewModel { Wizard2ViewModel(get(), get(), get()) }
 }

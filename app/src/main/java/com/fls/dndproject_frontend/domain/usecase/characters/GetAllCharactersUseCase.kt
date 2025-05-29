@@ -5,9 +5,9 @@ import com.fls.dndproject_frontend.domain.model.Characters
 import kotlinx.coroutines.flow.Flow
 
 class GetAllCharactersUseCase(
-    private val charactersRestRepository: CharactersRestRepository
+    private val charactersRepository: CharactersRestRepository
 ) {
     operator fun invoke(): Flow<List<Characters>> {
-        return charactersRestRepository.getAllCharacters()
+        return charactersRepository.getAllCharacters()
     }
 }
