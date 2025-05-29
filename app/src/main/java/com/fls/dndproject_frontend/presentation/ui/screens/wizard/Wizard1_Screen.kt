@@ -1,3 +1,4 @@
+// presentation/ui/screens/wizard/Wizard1_Screen.kt
 package com.fls.dndproject_frontend.presentation.ui.screens.wizard
 
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Alignment
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 import com.fls.dndproject_frontend.presentation.viewmodel.wizard.Wizard1ViewModel
+import com.fls.dndproject_frontend.presentation.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,7 +28,6 @@ fun Wizard1_Screen(
     userId: Int?,
     viewModel: Wizard1ViewModel = koinViewModel()
 ) {
-    // Recopilar estados del ViewModel
     val name by viewModel.characterName.collectAsState()
     val description by viewModel.description.collectAsState()
     val personalityTraits by viewModel.personalityTraits.collectAsState()
@@ -79,109 +80,115 @@ fun Wizard1_Screen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Para comenzar, dale un sentido a tu personaje",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Campo: Nombre
-            OutlinedTextField(
-                value = name,
-                onValueChange = { viewModel.setCharacterName(it) },
-                label = { Text("Nombre del Personaje") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = true
-            )
-
-            // Campo: Descripción
-            OutlinedTextField(
-                value = description,
-                onValueChange = { viewModel.setDescription(it) },
-                label = { Text("Descripción") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = false,
-                // maxLines = 5
-            )
-
-            // Campo: Rasgos de personalidad
-            OutlinedTextField(
-                value = personalityTraits,
-                onValueChange = { viewModel.setPersonalityTraits(it) },
-                label = { Text("Rasgos de personalidad") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = false,
-                // maxLines = 5
-            )
-
-            // Campo: Ideales
-            OutlinedTextField(
-                value = ideals,
-                onValueChange = { viewModel.setIdeals(it) },
-                label = { Text("Ideales") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = false,
-                // maxLines = 5
-            )
-
-            // Campo: Vínculos
-            OutlinedTextField(
-                value = bonds,
-                onValueChange = { viewModel.setBonds(it) },
-                label = { Text("Vínculos") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = false,
-                // maxLines = 5
-            )
-
-            // Campo: Defectos
-            OutlinedTextField(
-                value = flaws,
-                onValueChange = { viewModel.setFlaws(it) },
-                label = { Text("Defectos") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = outlinedTextFieldColors,
-                singleLine = false,
-                // maxLines = 5
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "¿Necesitas ayuda?",
-                color = Color.Black,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, bottom = 8.dp)
-                    .clickable {
-                        println("DEBUG: Se hizo clic en '¿Necesitas ayuda?'")
-                        // Aquí podrías mostrar un Dialog, navegar a una pantalla de ayuda, etc.
-                    }
-            )
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Para comenzar, dale un sentido a tu personaje",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { viewModel.setCharacterName(it) },
+                    label = { Text("Nombre del Personaje") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { viewModel.setDescription(it) },
+                    label = { Text("Descripción") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = false,
+                    // maxLines = 5
+                )
+
+                OutlinedTextField(
+                    value = personalityTraits,
+                    onValueChange = { viewModel.setPersonalityTraits(it) },
+                    label = { Text("Rasgos de personalidad") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = false,
+                    // maxLines = 5
+                )
+
+                OutlinedTextField(
+                    value = ideals,
+                    onValueChange = { viewModel.setIdeals(it) },
+                    label = { Text("Ideales") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = false,
+                    // maxLines = 5
+                )
+
+                OutlinedTextField(
+                    value = bonds,
+                    onValueChange = { viewModel.setBonds(it) },
+                    label = { Text("Vínculos") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = false,
+                    // maxLines = 5
+                )
+
+                OutlinedTextField(
+                    value = flaws,
+                    onValueChange = { viewModel.setFlaws(it) },
+                    label = { Text("Defectos") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = outlinedTextFieldColors,
+                    singleLine = false,
+                    // maxLines = 5
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "¿Necesitas ayuda?",
+                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, bottom = 8.dp)
+                        .clickable {
+                            println("DEBUG: Se hizo clic en '¿Necesitas ayuda?'")
+                        }
+                )
+            }
 
             Button(
                 onClick = {
                     if (viewModel.validateAndProceed()) {
-                        println("DEBUG: Datos de la primera pantalla válidos. Preparado para la siguiente.")
-                        // TODO: Navegar a la siguiente pantalla (Wizard2_Screen) y pasar los datos
-                        // Ejemplo: navController.navigate(Screen.Wizard2.createRoute(userId, ... ))
+                        navController.navigate(
+                            Screen.Wizard2.createRoute(
+                                userId = userId ?: 0,
+                                name = name,
+                                description = description,
+                                personalityTraits = personalityTraits,
+                                ideals = ideals,
+                                bonds = bonds,
+                                flaws = flaws
+                            )
+                        )
                     } else {
                         println("DEBUG: Validación fallida en la primera pantalla.")
                     }
@@ -189,11 +196,12 @@ fun Wizard1_Screen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp), // Aplicar padding al botón mismo
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(185, 0, 0))
             ) {
                 Text("Siguiente", color = Color.White)
             }
         }
     }
+
 }

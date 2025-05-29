@@ -14,6 +14,7 @@ import com.fls.dndproject_frontend.presentation.ui.screens.myCharacters.MyCharac
 import com.fls.dndproject_frontend.presentation.ui.screens.profile.ProfileScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.savedCharacters.SavedCharactersScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.wizard.Wizard1_Screen
+import com.fls.dndproject_frontend.presentation.ui.screens.wizard.Wizard2_Screen
 
 @Composable
 fun NavGraph() {
@@ -78,6 +79,38 @@ fun NavGraph() {
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getInt("userId")
             Wizard1_Screen(navController = navController, userId = userId)
+        }
+
+        composable(
+            route = Screen.Wizard2.route,
+            arguments = listOf(
+                navArgument("userId") { type = NavType.IntType },
+                navArgument("name") { type = NavType.StringType },
+                navArgument("description") { type = NavType.StringType },
+                navArgument("personalityTraits") { type = NavType.StringType },
+                navArgument("ideals") { type = NavType.StringType },
+                navArgument("bonds") { type = NavType.StringType },
+                navArgument("flaws") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId")
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+            val personalityTraits = backStackEntry.arguments?.getString("personalityTraits") ?: ""
+            val ideals = backStackEntry.arguments?.getString("ideals") ?: ""
+            val bonds = backStackEntry.arguments?.getString("bonds") ?: ""
+            val flaws = backStackEntry.arguments?.getString("flaws") ?: ""
+
+            Wizard2_Screen(
+                navController = navController,
+                userId = userId,
+                name = name,
+                description = description,
+                personalityTraits = personalityTraits,
+                ideals = ideals,
+                bonds = bonds,
+                flaws = flaws
+            )
         }
     }
 }
