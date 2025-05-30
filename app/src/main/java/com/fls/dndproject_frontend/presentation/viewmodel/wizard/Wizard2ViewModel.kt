@@ -9,7 +9,6 @@ import com.fls.dndproject_frontend.domain.model.Abilities
 import com.fls.dndproject_frontend.domain.model.Equipment
 import com.fls.dndproject_frontend.domain.model.Competencies
 import com.fls.dndproject_frontend.domain.model.Stats
-import com.fls.dndproject_frontend.domain.model.StatsChange
 import com.fls.dndproject_frontend.domain.model.Characters
 import com.fls.dndproject_frontend.domain.model.User
 import com.fls.dndproject_frontend.domain.usecase.background.GetAllBackgroundsUseCase
