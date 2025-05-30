@@ -1,12 +1,11 @@
 package com.fls.dndproject_frontend.domain.usecase.ollama
 
-import com.fls.dndproject_frontend.domain.model.ChatMessage
+import com.fls.dndproject_frontend.data.source.remote.dto.OllamaChatResponse // Importa OllamaChatResponse
 import com.fls.dndproject_frontend.domain.repository.ChatRepository
+import kotlinx.coroutines.flow.Flow // Importa Flow
 
 class SendMessageUseCase(private val chatRepository: ChatRepository) {
-    suspend operator fun invoke(userMessage: ChatMessage, conversationHistory: List<ChatMessage>): ChatMessage {
-        // Aquí podrías añadir lógica de negocio adicional antes de enviar,
-        // como validaciones, pre-procesamiento del mensaje, etc.
-        return chatRepository.sendMessage(userMessage.text, conversationHistory)
+    suspend operator fun invoke(userMessageContent: String): Flow<OllamaChatResponse> {
+        return chatRepository.sendMessage(userMessageContent)
     }
 }

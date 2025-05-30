@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fls.dndproject_frontend.presentation.ui.screens.characterInfo.CharacterInfo_Screen
+import com.fls.dndproject_frontend.presentation.ui.screens.chat.ChatScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.createAccount.CreateAccountScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.forum.ForumScreen
 import com.fls.dndproject_frontend.presentation.ui.screens.login.LoginScreen
@@ -111,6 +112,10 @@ fun NavGraph() {
                 bonds = bonds,
                 flaws = flaws
             )
+        }
+
+        composable(route = Screen.Chatbot.route) {
+            ChatScreen(navController)
         }
     }
 }

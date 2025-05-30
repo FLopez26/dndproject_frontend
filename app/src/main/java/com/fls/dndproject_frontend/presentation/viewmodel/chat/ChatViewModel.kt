@@ -1,77 +1,93 @@
-package com.fls.dndproject_frontend.presentation.viewmodel.chat
+package com.fls.dndproject_frontend.presentation.viewmodel.chat // Asegúrate de que tu paquete sea el correcto
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fls.dndproject_frontend.domain.model.ChatMessage
-import com.fls.dndproject_frontend.domain.model.Sender
-import com.fls.dndproject_frontend.domain.usecase.ollama.SendMessageUseCase
+import com.fls.dndproject_frontend.data.repository.ChatRepositoryException
+import com.fls.dndproject_frontend.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.update // Para actualizar el StateFlow de forma segura
 
 class ChatViewModel(
-    private val sendMessageUseCase: SendMessageUseCase
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
 
-    // Estado de la lista de mensajes (mutable)
-    private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
-    // Estado expuesto a la UI (inmutable)
-    val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
+    // Representa el estado actual del chat (mensajes, estado de carga, errores)
+    private val _chatUiState = MutableStateFlow(ChatUiState())
+    val chatUiState: StateFlow<ChatUiState> = _chatUiState
 
-    // Estado para indicar si hay una operación en curso (cargando)
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    // Estado para mensajes de error de la UI
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
-
-    /**
-     * Envía un mensaje del usuario al chatbot.
-     * @param text El texto del mensaje del usuario.
-     */
-    fun sendUserMessage(text: String) {
-        if (text.isBlank()) return // No enviar mensajes vacíos
-        if (_isLoading.value) return // Evitar múltiples envíos si ya está cargando
-
-        _isLoading.value = true
-        _errorMessage.value = null // Limpiar cualquier error anterior
-
-        // Crear el mensaje del usuario y añadirlo inmediatamente a la UI
-        val userMessage = ChatMessage(text = text, sender = Sender.USER)
-        _messages.update { currentMessages -> currentMessages + userMessage }
+    fun sendUserMessage(message: String) {
+        // Añadir el mensaje del usuario a la lista de mensajes
+        _chatUiState.update { currentState ->
+            currentState.copy(
+                messages = currentState.messages + ChatMessage(message, MessageRole.USER),
+                isLoading = true,
+                error = null
+            )
+        }
 
         viewModelScope.launch {
             try {
-                // El caso de uso maneja la lógica de enviar el mensaje al repositorio
-                val botResponse = sendMessageUseCase(userMessage, _messages.value)
+                // Iniciar la colección del flujo de respuestas del repositorio
+                chatRepository.sendMessage(message).collect { chunk ->
+                    // Cada 'chunk' es un OllamaChatResponse que representa un fragmento de la respuesta
+                    _chatUiState.update { currentState ->
+                        // Busca el último mensaje del asistente para actualizarlo o añadir uno nuevo
+                        val updatedMessages = currentState.messages.toMutableList()
+                        val lastMessage = updatedMessages.lastOrNull()
 
-                // Añadir la respuesta del bot a la UI
-                _messages.update { currentMessages -> currentMessages + botResponse }
-
+                        if (lastMessage?.role == MessageRole.ASSISTANT && !lastMessage.isComplete) {
+                            // Si el último mensaje es del asistente y no está completo, lo actualizamos
+                            val updatedContent = lastMessage.content + chunk.message.content
+                            updatedMessages[updatedMessages.lastIndex] = lastMessage.copy(
+                                content = updatedContent,
+                                isComplete = chunk.done // Marcar como completo cuando `done` sea true
+                            )
+                        } else {
+                            // Si no hay mensaje del asistente o el último ya está completo, añadir uno nuevo
+                            updatedMessages.add(
+                                ChatMessage(chunk.message.content, MessageRole.ASSISTANT, isComplete = chunk.done)
+                            )
+                        }
+                        // Actualizar el estado de carga y los mensajes
+                        currentState.copy(
+                            messages = updatedMessages,
+                            isLoading = !chunk.done // isLoading es falso cuando `done` es true
+                        )
+                    }
+                }
+            } catch (e: ChatRepositoryException) {
+                // Manejar errores de la capa de repositorio
+                _chatUiState.update { it.copy(isLoading = false, error = e.message) }
+                println("Error en ChatViewModel: ${e.message}")
+                e.printStackTrace()
             } catch (e: Exception) {
-                // Manejar errores: mostrar un mensaje al usuario
-                _errorMessage.value = "Error al comunicarse con el bot: ${e.localizedMessage ?: "Desconocido"}. Asegúrate de que Ollama está corriendo y el modelo está descargado."
-                println("Error en ChatViewModel: ${e.stackTraceToString()}") // Para depuración
-            } finally {
-                _isLoading.value = false
+                // Capturar cualquier otra excepción inesperada
+                _chatUiState.update { it.copy(isLoading = false, error = "An unexpected error occurred: ${e.message}") }
+                println("Error inesperado en ChatViewModel: ${e.message}")
+                e.printStackTrace()
             }
         }
     }
-
-    /**
-     * Limpia el mensaje de error.
-     */
     fun dismissError() {
-        _errorMessage.value = null
+        _chatUiState.update { currentState ->
+            currentState.copy(error = null)
+        }
     }
+}
+data class ChatUiState(
+    val messages: List<ChatMessage> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
 
-    /**
-     * Resetea la conversación (vacía los mensajes).
-     */
-    fun resetConversation() {
-        _messages.value = emptyList()
-    }
+data class ChatMessage(
+    val content: String,
+    val role: MessageRole,
+    val isComplete: Boolean = false // Indica si la generación del mensaje ha terminado
+)
+
+enum class MessageRole {
+    USER, ASSISTANT
 }

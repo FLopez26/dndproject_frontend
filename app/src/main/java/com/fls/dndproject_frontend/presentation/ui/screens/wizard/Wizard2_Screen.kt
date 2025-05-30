@@ -231,8 +231,7 @@ fun Wizard2_Screen(
                         .fillMaxWidth()
                         .padding(top = 4.dp, bottom = 8.dp)
                         .clickable {
-                            println("DEBUG: Se hizo clic en '¿Necesitas ayuda?'")
-                            // TODO: Implementar lógica de ayuda
+                            navController.navigate(Screen.Chatbot.route)
                         }
                 )
             }
@@ -240,12 +239,7 @@ fun Wizard2_Screen(
             // --- Botón para Crear Personaje ---
             Button(
                 onClick = {
-                    if (userId != null) {
-                        viewModel.createCharacter(userId)
-                    } else {
-                        println("DEBUG: userId es nulo, no se puede iniciar la creación del personaje.")
-                        // TODO: Mostrar un Snackbar al usuario
-                    }
+                    viewModel.createCharacter(userId ?: 0)
                 },
                 enabled = viewModel.areSelectionsComplete(), // El botón está habilitado si las selecciones están completas
                 modifier = Modifier

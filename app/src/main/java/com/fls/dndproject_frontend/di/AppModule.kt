@@ -61,9 +61,9 @@ val appModule = module {
     single { get<Retrofit>().create(StatsChangeServiceClient::class.java) }
     single { get<Retrofit>().create(UserServiceClient::class.java) }
 
-    single { OllamaApiClient() } // Instancia del cliente HTTP para Ollama
-    single<ChatRepository> { ChatRepositoryImpl(get()) } // Implementación del repositorio de chat
-    factory { SendMessageUseCase(get()) } // Caso de uso para enviar mensajes
+    single { OllamaApiClient() }
+    single<ChatRepository> { ChatRepositoryImpl(get()) }
+    factory { SendMessageUseCase(get()) }
 
     single { AbilitiesRestRepository(get()) }
     single { BackgroundRestRepository(get()) }

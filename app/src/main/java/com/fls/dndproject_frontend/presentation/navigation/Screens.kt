@@ -48,4 +48,5 @@ sealed class Screen(val route:String) {
                     "$encodedPersonalityTraits/$encodedIdeals/$encodedBonds/$encodedFlaws"
         }
     }
+    data object Chatbot : Screen("chatbot")
 }

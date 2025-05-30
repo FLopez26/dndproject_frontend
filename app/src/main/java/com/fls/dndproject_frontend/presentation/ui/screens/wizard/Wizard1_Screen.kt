@@ -170,7 +170,7 @@ fun Wizard1_Screen(
                         .fillMaxWidth()
                         .padding(top = 4.dp, bottom = 8.dp)
                         .clickable {
-                            println("DEBUG: Se hizo clic en '¿Necesitas ayuda?'")
+                            navController.navigate(Screen.Chatbot.route)
                         }
                 )
             }
