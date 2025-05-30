@@ -19,7 +19,7 @@ data class AbilitiesDto(
     companion object {
         fun fromAbilities(abilities: Abilities): AbilitiesDto {
             return AbilitiesDto(
-                abilityId = abilities.abilityId,
+                abilityId = abilities.abilityId ?: 0,
                 race = abilities.race?.let { RaceDto.fromRace(it) },
                 characterClass = abilities.characterClass?.let { CharacterClassDto.fromCharacterClass(it) }
             )

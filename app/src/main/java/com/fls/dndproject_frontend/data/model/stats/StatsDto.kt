@@ -29,7 +29,7 @@ data class StatsDto(
     companion object {
         fun fromStats(stats: Stats): StatsDto {
             return StatsDto(
-                statsId = stats.statsId,
+                statsId = stats.statsId ?: 0,
                 strength = stats.strength,
                 dexterity = stats.dexterity,
                 constitution = stats.constitution,

@@ -20,6 +20,9 @@ import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import com.fls.dndproject_frontend.presentation.ui.components.SelectableCard
+import com.fls.dndproject_frontend.presentation.navigation.Screen
+// Ya no necesitamos importar CreateCharacterUseCase ni koinInject aquí,
+// porque la pantalla no los usa directamente.
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +36,7 @@ fun Wizard2_Screen(
     bonds: String,
     flaws: String,
     viewModel: Wizard2ViewModel = koinViewModel()
+    // createCharacterUseCase: CreateCharacterUseCase = koinInject() // ¡ELIMINAMOS ESTO!
 ) {
     val decodedName = URLDecoder.decode(name, StandardCharsets.UTF_8.toString())
     val decodedDescription = URLDecoder.decode(description, StandardCharsets.UTF_8.toString())
@@ -48,6 +52,39 @@ fun Wizard2_Screen(
     val selectedRace by viewModel.selectedRace.collectAsState()
     val selectedClass by viewModel.selectedClass.collectAsState()
     val selectedBackground by viewModel.selectedBackground.collectAsState()
+
+    // Observar el estado de la creación del personaje
+    val characterCreationStatus by viewModel.characterCreationStatus.collectAsState()
+
+    // Usar LaunchedEffect para reaccionar a los cambios en el estado de creación
+    LaunchedEffect(characterCreationStatus) {
+        characterCreationStatus?.let { result ->
+            result.onSuccess {
+                println("--- Personaje Creado Exitosamente (desde UI observer) ---")
+                // Navegar a la pantalla de personajes si todo fue bien
+                userId?.let {
+                    navController.navigate(Screen.MyCharacters.createRoute(it)) {
+                        popUpTo(Screen.MyCharacters.route) { inclusive = true }
+                    }
+                }
+            }.onFailure { e ->
+                println("--- Error al Crear Personaje (desde UI observer) ---")
+                println("Error: ${e.message}")
+                // TODO: Mostrar un Snackbar o Toast al usuario con el error
+            }
+            // Puedes resetear el estado si quieres que no se dispare de nuevo al recomponer
+            // viewModel.resetCharacterCreationStatus() // Si implementas esta función en el ViewModel
+        }
+    }
+
+    LaunchedEffect(userId, name, description, personalityTraits, ideals, bonds, flaws) {
+        viewModel.setCharacterName(decodedName)
+        viewModel.setCharacterDescription(decodedDescription)
+        viewModel.setPersonalityTraits(decodedPersonalityTraits)
+        viewModel.setIdeals(decodedIdeals)
+        viewModel.setBonds(decodedBonds)
+        viewModel.setFlaws(decodedFlaws)
+    }
 
     Scaffold(
         topBar = {
@@ -107,7 +144,6 @@ fun Wizard2_Screen(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                // Rejilla de Razas
                 if (races.isEmpty()) {
                     CircularProgressIndicator(color = Color(185, 0, 0))
                     Text("Cargando razas...", style = MaterialTheme.typography.bodyMedium)
@@ -136,7 +172,6 @@ fun Wizard2_Screen(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                // Rejilla de Clases
                 if (classes.isEmpty()) {
                     CircularProgressIndicator(color = Color(185, 0, 0))
                     Text("Cargando clases...", style = MaterialTheme.typography.bodyMedium)
@@ -165,7 +200,6 @@ fun Wizard2_Screen(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                // Rejilla de Trasfondos
                 if (backgrounds.isEmpty()) {
                     CircularProgressIndicator(color = Color(185, 0, 0))
                     Text("Cargando trasfondos...", style = MaterialTheme.typography.bodyMedium)
@@ -188,7 +222,6 @@ fun Wizard2_Screen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-
                 Text(
                     text = "¿Necesitas ayuda?",
                     color = Color.Black,
@@ -204,17 +237,24 @@ fun Wizard2_Screen(
                 )
             }
 
+            // --- Botón para Crear Personaje ---
             Button(
-                onClick = {//TODO
+                onClick = {
+                    if (userId != null) {
+                        viewModel.createCharacter(userId)
+                    } else {
+                        println("DEBUG: userId es nulo, no se puede iniciar la creación del personaje.")
+                        // TODO: Mostrar un Snackbar al usuario
+                    }
                 },
-                enabled = viewModel.areSelectionsComplete(),
+                enabled = viewModel.areSelectionsComplete(), // El botón está habilitado si las selecciones están completas
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(Color(185, 0, 0))
             ) {
-                Text("Siguiente", color = Color.White)
+                Text("Crear Personaje", color = Color.White)
             }
         }
     }

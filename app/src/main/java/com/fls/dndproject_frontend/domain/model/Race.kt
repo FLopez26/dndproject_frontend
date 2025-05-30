@@ -1,7 +1,7 @@
 package com.fls.dndproject_frontend.domain.model
 
 data class Race(
-    val raceId: Int = 0,
+    val raceId: Int?,
     val name: String,
     val raceSelection: Int?,
     val speed: Int?,

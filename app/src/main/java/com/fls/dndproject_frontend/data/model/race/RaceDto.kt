@@ -26,7 +26,7 @@ data class RaceDto(
     companion object {
         fun fromRace(race: Race): RaceDto {
             return RaceDto(
-                raceId = race.raceId,
+                raceId = race.raceId ?: 0,
                 name = race.name,
                 raceSelection = race.raceSelection,
                 speed = race.speed,

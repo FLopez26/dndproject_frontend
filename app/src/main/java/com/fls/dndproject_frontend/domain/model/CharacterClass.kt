@@ -1,7 +1,7 @@
 package com.fls.dndproject_frontend.domain.model
 
 data class CharacterClass(
-    val classId: Int = 0,
+    val classId: Int?,
     val name: String,
     val selection: Int?,
     val diceHitPoints: String?,

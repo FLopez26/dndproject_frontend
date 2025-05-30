@@ -26,7 +26,7 @@ data class StatsChangeDto(
     companion object {
         fun fromStatsChange(statsChange: StatsChange): StatsChangeDto {
             return StatsChangeDto(
-                statsChangeId = statsChange.statsChangeId,
+                statsChangeId = statsChange.statsChangeId ?: 0,
                 strength = statsChange.strength,
                 dexterity = statsChange.dexterity,
                 constitution = statsChange.constitution,

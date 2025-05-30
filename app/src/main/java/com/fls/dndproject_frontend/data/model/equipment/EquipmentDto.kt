@@ -19,7 +19,7 @@ data class EquipmentDto(
     companion object {
         fun fromEquipment(equipment: Equipment): EquipmentDto {
             return EquipmentDto(
-                equipmentId = equipment.equipmentId,
+                equipmentId = equipment.equipmentId ?: 0,
                 characterClass = equipment.characterClass?.let { CharacterClassDto.fromCharacterClass(it) },
                 background = equipment.background?.let { BackgroundDto.fromBackground(it) }
             )

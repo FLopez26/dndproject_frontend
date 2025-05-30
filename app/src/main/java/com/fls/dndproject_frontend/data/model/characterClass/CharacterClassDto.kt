@@ -24,7 +24,7 @@ data class CharacterClassDto(
     companion object {
         fun fromCharacterClass(characterClass: CharacterClass): CharacterClassDto {
             return CharacterClassDto(
-                classId = characterClass.classId,
+                classId = characterClass.classId ?: 0,
                 name = characterClass.name,
                 selection = characterClass.selection,
                 diceHitPoints = characterClass.diceHitPoints,

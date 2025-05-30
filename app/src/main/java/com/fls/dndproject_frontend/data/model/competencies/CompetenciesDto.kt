@@ -19,7 +19,7 @@ data class CompetenciesDto(
     companion object {
         fun fromCompetencies(competencies: Competencies): CompetenciesDto {
             return CompetenciesDto(
-                competencyId = competencies.competencyId,
+                competencyId = competencies.competencyId ?: 0,
                 characterClass = competencies.characterClass?.let { CharacterClassDto.fromCharacterClass(it) },
                 background = competencies.background?.let { BackgroundDto.fromBackground(it) }
             )
