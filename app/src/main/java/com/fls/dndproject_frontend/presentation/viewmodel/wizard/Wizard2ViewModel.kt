@@ -34,8 +34,6 @@ class Wizard2ViewModel(
     private val createCharacterUseCase: CreateCharacterUseCase
 ) : ViewModel() {
 
-    // ... (Todos tus StateFlows existentes) ...
-
     private val _characterCreationStatus = MutableStateFlow<Result<Unit>?>(null)
     val characterCreationStatus: StateFlow<Result<Unit>?> = _characterCreationStatus.asStateFlow()
 
@@ -163,31 +161,28 @@ class Wizard2ViewModel(
      * basándose en las selecciones de Raza, Clase y Trasfondo.
      */
     private fun generateHiddenCharacterData(race: Race?, charClass: CharacterClass?, background: Background?) {
-        // --- Generar Abilities ---
+
         val newAbilities = Abilities(
-            abilityId = null, // <--- ¡CAMBIADO A NULL!
+            abilityId = null,
             race = race,
             characterClass = charClass
         )
         _generatedAbilities.value = newAbilities
 
-        // --- Generar Equipment ---
         val newEquipment = Equipment(
-            equipmentId = null, // <--- ¡CAMBIADO A NULL!
+            equipmentId = null,
             characterClass = charClass,
             background = background
         )
         _generatedEquipment.value = newEquipment
 
-        // --- Generar Competencies ---
         val newCompetencies = Competencies(
-            competencyId = null, // <--- ¡CAMBIADO A NULL!
+            competencyId = null,
             characterClass = charClass,
             background = background
         )
         _generatedCompetencies.value = newCompetencies
 
-        // --- Generar Stats ---
         val baseStrength = Random.nextInt(8, 13)
         val baseDexterity = Random.nextInt(8, 13)
         val baseConstitution = Random.nextInt(8, 13)
@@ -207,7 +202,7 @@ class Wizard2ViewModel(
         val finalHitPoints = baseHitPoints + (raceStatsChange?.hitPoints ?: 0)
 
         val newStats = Stats(
-            statsId = null, // <--- ¡CAMBIADO A NULL!
+            statsId = null,
             strength = finalStrength,
             dexterity = finalDexterity,
             constitution = finalConstitution,
@@ -234,10 +229,6 @@ class Wizard2ViewModel(
                 _generatedStats.value != null
     }
 
-    /**
-     * Función que la UI llamará para iniciar la creación del personaje.
-     * Esta función llamará al UseCase.
-     */
     fun createCharacter(userId: Int) {
         viewModelScope.launch {
             _characterCreationStatus.value = null
@@ -278,7 +269,6 @@ class Wizard2ViewModel(
             println("  Stats ID: ${generatedStats.value?.statsId}")
             println("  Strength: ${generatedStats.value?.strength}")
             println("  Dexterity: ${generatedStats.value?.dexterity}")
-            // ... añade más stats si lo necesitas
 
             println("Is Public: ${isPublic.value}")
             println("User ID passed to getFinalCharacterData: $userId")
@@ -294,11 +284,6 @@ class Wizard2ViewModel(
         }
     }
 
-    /**
-     * Prepara y retorna el objeto Characters completo.
-     * Es 'private' porque solo lo usará la función 'createCharacter'.
-     * Ya es 'suspend' porque usa getUserByIdUseCase().firstOrNull().
-     */
     private suspend fun getFinalCharacterData(userId: Int): Characters? {
         val fullUser: User? = getUserByIdUseCase(userId).firstOrNull()
 

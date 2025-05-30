@@ -75,7 +75,7 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
     }.flowOn(Dispatchers.IO)
 
     suspend fun save(characters: Characters) {
-        charactersServiceClient.createCharacter(CreateCharactersDto.fromCharacters(characters))
+        charactersServiceClient.createCharacter(characters)
     }
 
     suspend fun delete(characterId: Int) {
