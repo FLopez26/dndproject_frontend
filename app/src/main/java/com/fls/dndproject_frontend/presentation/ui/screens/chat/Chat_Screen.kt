@@ -16,10 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fls.dndproject_frontend.presentation.viewmodel.chat.ChatViewModel
-// Importa las nuevas clases de estado del ViewModel
 import com.fls.dndproject_frontend.presentation.viewmodel.chat.ChatMessage // <-- Asegúrate de que esta sea la ruta correcta
 import com.fls.dndproject_frontend.presentation.viewmodel.chat.MessageRole // <-- Asegúrate de que esta sea la ruta correcta
 
@@ -39,29 +39,18 @@ fun ChatScreen(
     navController: NavController,
     chatViewModel: ChatViewModel = koinViewModel()
 ) {
-    // --- CAMBIOS CLAVE AQUÍ: Observar el chatUiState completo ---
     val uiState by chatViewModel.chatUiState.collectAsState()
-    // Ya no necesitas 'messages', 'isLoading', 'errorMessage' por separado
-    // Accede a ellos directamente desde uiState
     val messages = uiState.messages
     val isLoading = uiState.isLoading
-    val errorMessage = uiState.error // Cambiado a 'error' según el ViewModel
 
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     var inputText by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    // Define el color principal
-    val dndRed = Color(185, 0, 0) // RGB(185, 0, 0)
-
-    // Ajusta LaunchedEffect para reaccionar a cambios en messages y scrollear al final
-    // Es importante que el scroll solo se dispare cuando se añade un mensaje, no en cada token.
-    // Una forma de hacerlo es observando el tamaño de la lista de mensajes.
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             scope.launch {
-                // Scrollear al último elemento para mostrar el mensaje más reciente
                 listState.animateScrollToItem(messages.lastIndex)
             }
         }
@@ -75,8 +64,18 @@ fun ChatScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Ollama Chatbot (D&D)") },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Chat de Ayuda",
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White,
+                        maxLines = 1
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(185, 0, 0)
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -85,11 +84,7 @@ fun ChatScreen(
                             tint = Color.White
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = dndRed,
-                    titleContentColor = Color.White
-                )
+                }
             )
         },
         bottomBar = {
@@ -101,7 +96,7 @@ fun ChatScreen(
                     inputText = ""
                 },
                 isLoading = isLoading, // Pasa el estado de carga al input
-                accentColor = dndRed
+                accentColor = Color(185, 0, 0)
             )
         }
     ) { paddingValues ->
