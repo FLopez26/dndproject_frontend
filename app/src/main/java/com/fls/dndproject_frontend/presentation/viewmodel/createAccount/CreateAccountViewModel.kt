@@ -28,6 +28,9 @@ class CreateAccountViewModel(
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message
 
+    private val _accountCreatedSuccessfully = MutableStateFlow(false)
+    val accountCreatedSuccessfully: StateFlow<Boolean> = _accountCreatedSuccessfully
+
     fun setUsername(username: String) {
         this._username.value = username
     }
@@ -96,13 +99,19 @@ class CreateAccountViewModel(
                 createAccountUseCase(User(null, _username.value, _email.value, hashedPassword))
 
                 _message.value = "Cuenta creada exitosamente."
+                _accountCreatedSuccessfully.value = true
                 _username.value = ""
                 _email.value = ""
                 _password.value = ""
 
             } catch (e: Exception) {
                 _message.value = "Error en el proceso de creación: ${e.localizedMessage}"
+                _accountCreatedSuccessfully.value = false
             }
         }
+    }
+
+    fun resetAccountCreationSuccessState() {
+        _accountCreatedSuccessfully.value = false
     }
 }

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.* // Importa todo de Material3 para SnackbarHostState, SnackbarDuration
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +36,7 @@ fun CreateAccountScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val message by createAccountViewModel.message.collectAsState()
+    val accountCreatedSuccessfully by createAccountViewModel.accountCreatedSuccessfully.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -45,6 +46,15 @@ fun CreateAccountScreen(
                 message = it,
                 duration = SnackbarDuration.Short
             )
+        }
+    }
+
+    LaunchedEffect(accountCreatedSuccessfully) {
+        if (accountCreatedSuccessfully) {
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.CreateAccount.route) { inclusive = true }
+            }
+            createAccountViewModel.resetAccountCreationSuccessState()
         }
     }
 
@@ -125,7 +135,11 @@ fun CreateAccountScreen(
             }
             Spacer(modifier = Modifier.height(25.dp))
             Button(
-                onClick = { createAccountViewModel.createAccount(confirmPassword) },
+                onClick = {
+                    createAccountViewModel.createAccount(confirmPassword)
+                    if(message == "Cuenta creada exitosamente."){
+                        navController.navigate(Screen.Login.route)
+                    }},
                 modifier = Modifier
                     .align(Alignment.End)
                     .width(130.dp),
