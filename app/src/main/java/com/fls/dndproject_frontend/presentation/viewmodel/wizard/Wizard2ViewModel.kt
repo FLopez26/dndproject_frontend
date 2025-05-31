@@ -237,41 +237,6 @@ class Wizard2ViewModel(
                 return@launch
             }
 
-            println("--- DEBUG: Antes de construir finalCharacter ---")
-            println("Character Name: ${characterName.value}")
-            println("Description: ${characterDescription.value}")
-            println("Personality Traits: ${personalityTraits.value}")
-            println("Ideals: ${ideals.value}")
-            println("Bonds: ${bonds.value}")
-            println("Flaws: ${flaws.value}")
-
-            println("Selected Race: ${selectedRace.value?.name} (ID: ${selectedRace.value?.raceId})")
-            println("Selected Class: ${selectedClass.value?.name} (ID: ${selectedClass.value?.classId})")
-            println("Selected Background: ${selectedBackground.value?.name} (ID: ${selectedBackground.value?.backgroundId})")
-
-            println("Generated Abilities: ${generatedAbilities.value}")
-            println("  Abilities ID: ${generatedAbilities.value?.abilityId}")
-            println("  Abilities Race: ${generatedAbilities.value?.race?.name} (ID: ${generatedAbilities.value?.race?.raceId})")
-            println("  Abilities Class: ${generatedAbilities.value?.characterClass?.name} (ID: ${generatedAbilities.value?.characterClass?.classId})")
-
-            println("Generated Equipment: ${generatedEquipment.value}")
-            println("  Equipment ID: ${generatedEquipment.value?.equipmentId}")
-            println("  Equipment Class: ${generatedEquipment.value?.characterClass?.name} (ID: ${generatedEquipment.value?.characterClass?.classId})")
-            println("  Equipment Background: ${generatedEquipment.value?.background?.name} (ID: ${generatedEquipment.value?.background?.backgroundId})")
-
-            println("Generated Competencies: ${generatedCompetencies.value}")
-            println("  Competencies ID: ${generatedCompetencies.value?.competencyId}")
-            println("  Competencies Class: ${generatedCompetencies.value?.characterClass?.name} (ID: ${generatedCompetencies.value?.characterClass?.classId})")
-            println("  Competencies Background: ${generatedCompetencies.value?.background?.name} (ID: ${generatedCompetencies.value?.background?.backgroundId})")
-
-            println("Generated Stats: ${generatedStats.value}")
-            println("  Stats ID: ${generatedStats.value?.statsId}")
-            println("  Strength: ${generatedStats.value?.strength}")
-            println("  Dexterity: ${generatedStats.value?.dexterity}")
-
-            println("Is Public: ${isPublic.value}")
-            println("User ID passed to getFinalCharacterData: $userId")
-
             val finalCharacter = getFinalCharacterData(userId)
 
             if (finalCharacter == null) {
