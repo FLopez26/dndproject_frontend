@@ -27,6 +27,7 @@ import com.fls.dndproject_frontend.domain.usecase.background.GetAllBackgroundsUs
 import com.fls.dndproject_frontend.domain.usecase.characterClass.GetAllCharacterClassesUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.CharactersInfoUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.CreateCharacterUseCase
+import com.fls.dndproject_frontend.domain.usecase.characters.DeleteCharacterUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.GetAllCharactersUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.ListCharactersByUserUseCase
 import com.fls.dndproject_frontend.domain.usecase.characters.UpdateCharacterUseCase
@@ -87,11 +88,12 @@ val appModule = module {
     factory { GetAllCharacterClassesUseCase(get()) }
     factory { GetAllRacesUseCase(get()) }
     factory { CreateCharacterUseCase(get()) }
+    factory { DeleteCharacterUseCase(get()) }
 
     viewModel { CreateAccountViewModel(get(),get())}
     viewModel { LoginViewModel(get()) }
     viewModel { MyCharactersViewModel(get(), get()) }
-    viewModel { CharacterInfoViewModel(get(), get()) }
+    viewModel { CharacterInfoViewModel(get(), get(), get()) }
     viewModel { ProfileViewModel(get()) }
     viewModel { ForumViewModel(get()) }
     viewModel { Wizard1ViewModel() }

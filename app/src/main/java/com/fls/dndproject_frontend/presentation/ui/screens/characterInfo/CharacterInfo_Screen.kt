@@ -38,6 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.draw.clip
 import coil.compose.AsyncImage
@@ -98,7 +99,7 @@ fun CharacterInfo_Screen(
                         val isOwner = character?.user?.userId == userId
 
                         if (isOwner) {
-                            val publicityIcon = if (character?.isPublic == true) {
+                            val publicIcon = if (character?.isPublic == true) {
                                 Icons.Filled.Public
                             } else {
                                 Icons.Filled.Lock
@@ -106,8 +107,23 @@ fun CharacterInfo_Screen(
 
                             IconButton(onClick = { showPublicDialog = true }) {
                                 Icon(
-                                    imageVector = publicityIcon,
+                                    imageVector = publicIcon,
                                     contentDescription = if (character?.isPublic == true) "Personaje Público" else "Personaje Privado",
+                                    tint = Color.White
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    character?.characterId?.let { id ->
+                                        characterInfoViewModel.deleteCharacter(id) {
+                                            navController.popBackStack()
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Eliminar personaje",
                                     tint = Color.White
                                 )
                             }
