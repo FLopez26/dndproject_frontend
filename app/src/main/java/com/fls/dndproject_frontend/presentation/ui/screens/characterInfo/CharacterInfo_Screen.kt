@@ -53,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
+import com.fls.dndproject_frontend.presentation.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,10 +65,37 @@ fun CharacterInfo_Screen(
 ) {
     val character by characterInfoViewModel.character.collectAsState()
     var showPublicDialog  by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    val characterDeletedSuccessfully by characterInfoViewModel.characterDeletedSuccessfully.collectAsState()
 
     LaunchedEffect(characterId) {
         characterId?.let { id ->
             characterInfoViewModel.loadCharacterDetails(id)
+        }
+    }
+
+    LaunchedEffect(characterDeletedSuccessfully) {
+        if (characterDeletedSuccessfully) {
+            // Imprime para depurar: ver si se ejecuta este bloque
+            println("DEBUG: characterDeletedSuccessfully es TRUE. Intentando navegar.")
+            if (userId != null) {
+                val routeWithId = Screen.MyCharacters.route + "/${userId}"
+                println("DEBUG: Ruta de navegación: $routeWithId")
+                navController.navigate(routeWithId) {
+                    // Estas banderas son CRUCIALES para limpiar el back stack
+                    popUpTo(Screen.MyCharacters.route) {
+                        inclusive = true // Elimina la pantalla actual y cualquier MyCharacters previo
+                    }
+                    launchSingleTop = true // Evita duplicados si ya está en la parte superior
+                }
+                // IMPORTANTE: Resetear el estado DESPUÉS de intentar la navegación
+                characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
+            } else {
+                println("ERROR: userId es nulo al intentar navegar después de la eliminación.")
+                navController.popBackStack() // Fallback
+                characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
+            }
         }
     }
 
@@ -114,11 +142,7 @@ fun CharacterInfo_Screen(
                             }
                             IconButton(
                                 onClick = {
-                                    character?.characterId?.let { id ->
-                                        characterInfoViewModel.deleteCharacter(id) {
-                                            navController.popBackStack()
-                                        }
-                                    }
+                                    showDeleteDialog = true
                                 }
                             ) {
                                 Icon(
@@ -424,6 +448,37 @@ fun CharacterInfo_Screen(
                 TextButton(
                     onClick = {
                         showPublicDialog = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteDialog = false
+            },
+            title = { Text(text = "¿Estás seguro de eliminar este personaje?") },
+            text = { Text(text = "Esta acción es irreversible y el personaje '${character?.name ?: "seleccionado"}' se eliminará permanentemente.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false // Cierra el diálogo
+                        character?.characterId?.let { id ->
+                            characterInfoViewModel.deleteCharacter(id) // Solo llama al ViewModel
+                            // ¡LA NAVEGACIÓN OCURRE EN EL LaunchedEffect!
+                        }
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
                     }
                 ) {
                     Text("Cancelar")

@@ -19,6 +19,9 @@ class CharacterInfoViewModel(
     private val _character = MutableStateFlow<Characters?>(null)
     val character: StateFlow<Characters?> = _character
 
+    private val _characterDeletedSuccessfully = MutableStateFlow(false)
+    val characterDeletedSuccessfully: StateFlow<Boolean> = _characterDeletedSuccessfully
+
     fun loadCharacterDetails(characterId: Int) {
         viewModelScope.launch {
             _character.value = null
@@ -50,16 +53,19 @@ class CharacterInfoViewModel(
         }
     }
 
-    fun deleteCharacter(characterId: Int, onDeleteComplete: () -> Unit) {
+    fun deleteCharacter(characterId: Int) {
         viewModelScope.launch {
             try {
                 deleteCharacterUseCase(characterId)
-                onDeleteComplete() // Llama al callback cuando la eliminación es exitosa
+                _characterDeletedSuccessfully.value = true
             } catch (e: Exception) {
-                println("Error deleting character: $e")
-                // Manejar el error, quizás mostrando un mensaje al usuario
+                _characterDeletedSuccessfully.value = false
             }
         }
+    }
+
+    fun resetCharacterDeletedSuccessfullyState() {
+        _characterDeletedSuccessfully.value = false
     }
 
 }
