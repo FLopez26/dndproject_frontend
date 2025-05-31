@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.dndproject_frontend.ui.theme.AppStyles
-import com.fls.dndproject_frontend.domain.model.Characters
 import com.fls.dndproject_frontend.presentation.navigation.Screen
 import com.fls.dndproject_frontend.presentation.ui.components.CustomNavigationBar
 import com.fls.dndproject_frontend.presentation.viewmodel.myCharacters.MyCharactersViewModel
@@ -91,7 +90,6 @@ fun MyCharactersScreen(
                         val targetRoute = when (routeFromCustomNavigationBar) {
                             Screen.MyCharacters.route -> Screen.MyCharacters.createRoute(id)
                             Screen.Forum.route -> Screen.Forum.createRoute(id)
-                            Screen.SavedCharacters.route -> Screen.SavedCharacters.createRoute(id)
                             Screen.Profile.route -> Screen.Profile.createRoute(id)
                             else -> {
                                 println("DEBUG: CustomNavigationBar passed an unexpected route: $routeFromCustomNavigationBar")

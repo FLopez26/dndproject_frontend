@@ -15,9 +15,6 @@ sealed class Screen(val route:String) {
     object Forum : Screen("forum_screen/{userId}") {
         fun createRoute(userId: Int) = "forum_screen/$userId"
     }
-    object SavedCharacters : Screen("saved_characters_screen/{userId}") {
-        fun createRoute(userId: Int) = "saved_characters_screen/$userId"
-    }
     object Profile : Screen("profile_screen/{userId}") {
         fun createRoute(userId: Int) = "profile_screen/$userId"
     }

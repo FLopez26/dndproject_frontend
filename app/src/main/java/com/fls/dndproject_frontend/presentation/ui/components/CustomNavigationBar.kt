@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Public
 
@@ -33,7 +32,6 @@ fun CustomNavigationBar(
     val items = listOf(
         NavigationItem("MyCharacters", Icons.Filled.Home, Screen.MyCharacters.route),
         NavigationItem("Forum", Icons.Filled.Public, Screen.Forum.route),
-        NavigationItem("SavedCharacters", Icons.Filled.Bookmark, Screen.SavedCharacters.route),
         NavigationItem("Profile", Icons.Filled.Person, Screen.Profile.route)
     )
 

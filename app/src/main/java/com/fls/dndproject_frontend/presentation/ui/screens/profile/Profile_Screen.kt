@@ -85,7 +85,6 @@ fun ProfileScreen(
                         val targetRoute = when (routeFromCustomNavigationBar) {
                             Screen.MyCharacters.route -> Screen.MyCharacters.createRoute(id)
                             Screen.Forum.route -> Screen.Forum.createRoute(id)
-                            Screen.SavedCharacters.route -> Screen.SavedCharacters.createRoute(id)
                             Screen.Profile.route -> Screen.Profile.createRoute(id)
                             else -> routeFromCustomNavigationBar
                         }

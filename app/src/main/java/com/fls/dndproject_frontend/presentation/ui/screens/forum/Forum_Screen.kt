@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.dndproject_frontend.ui.theme.AppStyles
 import com.fls.dndproject_frontend.presentation.navigation.Screen
 import com.fls.dndproject_frontend.presentation.ui.components.CustomNavigationBar
 import com.fls.dndproject_frontend.presentation.ui.components.MyCharactersCard
@@ -77,7 +75,6 @@ fun ForumScreen(
                         val targetRoute = when (route) {
                             Screen.MyCharacters.route -> Screen.MyCharacters.createRoute(id)
                             Screen.Forum.route -> Screen.Forum.createRoute(id)
-                            Screen.SavedCharacters.route -> Screen.SavedCharacters.createRoute(id)
                             Screen.Profile.route -> Screen.Profile.createRoute(id)
                             else -> route
                         }
