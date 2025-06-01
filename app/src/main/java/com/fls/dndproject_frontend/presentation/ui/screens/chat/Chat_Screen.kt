@@ -20,19 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fls.dndproject_frontend.presentation.viewmodel.chat.ChatViewModel
-import com.fls.dndproject_frontend.presentation.viewmodel.chat.ChatMessage // <-- Asegúrate de que esta sea la ruta correcta
-import com.fls.dndproject_frontend.presentation.viewmodel.chat.MessageRole // <-- Asegúrate de que esta sea la ruta correcta
+import com.fls.dndproject_frontend.presentation.viewmodel.chat.ChatMessage
+import com.fls.dndproject_frontend.presentation.viewmodel.chat.MessageRole
 
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-/**
- * Composable que representa la pantalla de chat.
- * Recibe el NavController para manejar la navegación y obtiene su ViewModel con Koin.
- *
- * @param navController El NavController para gestionar la navegación dentro de la app.
- * @param chatViewModel El ViewModel de la pantalla de chat, inyectado por Koin por defecto.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
@@ -56,10 +49,9 @@ fun ChatScreen(
         }
     }
 
-    // Mostrar el Toast para errores
     uiState.error?.let { error ->
         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-        chatViewModel.dismissError() // Si tienes un método para limpiar el error en el ViewModel
+        chatViewModel.dismissError()
     }
 
     Scaffold(
@@ -95,7 +87,7 @@ fun ChatScreen(
                     chatViewModel.sendUserMessage(inputText)
                     inputText = ""
                 },
-                isLoading = isLoading, // Pasa el estado de carga al input
+                isLoading = isLoading,
                 accentColor = Color(185, 0, 0)
             )
         }
@@ -117,12 +109,12 @@ fun ChatScreen(
                 item {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart // Los mensajes del bot inician a la izquierda
+                        contentAlignment = Alignment.CenterStart
                     ) {
                         Card(
                             shape = RoundedCornerShape(8.dp),
                             colors = CardDefaults.cardColors(containerColor = Color(0xFFE0E0E0)),
-                            modifier = Modifier.padding(end = 60.dp) // Deja espacio en el lado derecho
+                            modifier = Modifier.padding(end = 60.dp)
                         ) {
                             Text(
                                 text = "Bot escribiendo...",
@@ -137,7 +129,6 @@ fun ChatScreen(
     }
 }
 
-// --- Composable para la burbuja de mensaje (AJUSTADO: `message.sender` ahora es `MessageRole`) ---
 @Composable
 fun ChatMessageBubble(message: ChatMessage) {
     Row(
@@ -147,26 +138,25 @@ fun ChatMessageBubble(message: ChatMessage) {
         Card(
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(
-                containerColor = when (message.role) { // <-- Usa message.role
+                containerColor = when (message.role) {
                     MessageRole.USER -> MaterialTheme.colorScheme.primaryContainer
-                    MessageRole.ASSISTANT -> MaterialTheme.colorScheme.secondaryContainer // <-- Usa MessageRole.ASSISTANT
+                    MessageRole.ASSISTANT -> MaterialTheme.colorScheme.secondaryContainer
                 }
             ),
             modifier = Modifier.widthIn(max = 300.dp)
         ) {
             Text(
-                text = message.content, // <-- Usa message.content
+                text = message.content,
                 modifier = Modifier.padding(8.dp),
-                color = when (message.role) { // <-- Usa message.role
+                color = when (message.role) {
                     MessageRole.USER -> MaterialTheme.colorScheme.onPrimaryContainer
-                    MessageRole.ASSISTANT -> MaterialTheme.colorScheme.onSecondaryContainer // <-- Usa MessageRole.ASSISTANT
+                    MessageRole.ASSISTANT -> MaterialTheme.colorScheme.onSecondaryContainer
                 }
             )
         }
     }
 }
 
-// --- Composable para la entrada de mensaje (sin cambios, ya era correcto) ---
 @Composable
 fun MessageInput(
     inputText: String,
@@ -191,11 +181,11 @@ fun MessageInput(
             singleLine = false,
             maxLines = 4,
             shape = RoundedCornerShape(24.dp),
-            enabled = !isLoading // Deshabilita la entrada si el bot está cargando
+            enabled = !isLoading
         )
         IconButton(
             onClick = onSendMessage,
-            enabled = inputText.isNotBlank() && !isLoading, // Deshabilita el botón si el bot está cargando o el texto está vacío
+            enabled = inputText.isNotBlank() && !isLoading,
             modifier = Modifier
                 .size(56.dp)
                 .background(

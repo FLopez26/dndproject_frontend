@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.fls.dndproject_frontend.domain.model.Abilities
 import com.fls.dndproject_frontend.domain.model.Background
 import com.fls.dndproject_frontend.domain.model.CharacterClass
-import com.fls.dndproject_frontend.domain.model.Characters // Asegúrate de que el campo 'image' aquí sea String?
+import com.fls.dndproject_frontend.domain.model.Characters
 import com.fls.dndproject_frontend.domain.model.Competencies
 import com.fls.dndproject_frontend.domain.model.Equipment
 import com.fls.dndproject_frontend.domain.model.Race
@@ -32,15 +32,14 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import kotlin.random.Random
 
-// Cambia de ViewModel a AndroidViewModel para acceder al contexto de la aplicación
 class Wizard2ViewModel(
-    application: Application, // Añade application como parámetro del constructor
+    application: Application, // Es necesario tener el contexto de la aplicación para poder mostrar la imagen (URI)
     private val getAllRacesUseCase: GetAllRacesUseCase,
     private val getAllCharacterClassesUseCase: GetAllCharacterClassesUseCase,
     private val getAllBackgroundsUseCase: GetAllBackgroundsUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val createCharacterUseCase: CreateCharacterUseCase
-) : AndroidViewModel(application) { // Llama al constructor de AndroidViewModel con application
+) : AndroidViewModel(application) {
 
     private val _characterCreationStatus = MutableStateFlow<Result<Unit>?>(null)
     val characterCreationStatus: StateFlow<Result<Unit>?> = _characterCreationStatus.asStateFlow()
@@ -93,11 +92,9 @@ class Wizard2ViewModel(
     private val _generatedStats = MutableStateFlow<Stats?>(null)
     val generatedStats: StateFlow<Stats?> = _generatedStats.asStateFlow()
 
-    // Guarda la imagen como un String Base64 para enviarla a la API
     private val _generatedImageBase64 = MutableStateFlow<String?>(null)
     val generatedImageBase64: StateFlow<String?> = _generatedImageBase64.asStateFlow()
 
-    // Para mostrar la imagen en la UI, guardamos la URI directamente
     private val _selectedImageUri = MutableStateFlow<Uri?>(null)
     val selectedImageUri: StateFlow<Uri?> = _selectedImageUri.asStateFlow()
 
@@ -169,28 +166,20 @@ class Wizard2ViewModel(
     fun setBonds(bonds: String) { _bonds.value = bonds }
     fun setFlaws(flaws: String) { _flaws.value = flaws }
 
-    /**
-     * Establece la URI de la imagen seleccionada, la convierte a ByteArray, la comprime
-     * y luego la codifica a Base64 para guardarla en el ViewModel.
-     */
     fun setSelectedImageUri(uri: Uri?) {
-        _selectedImageUri.value = uri // Guarda la URI para la UI
+        _selectedImageUri.value = uri
         if (uri != null) {
             viewModelScope.launch {
                 val originalBytes = uriToByteArray(uri)
                 if (originalBytes != null) {
-                    // Comprime la imagen antes de codificarla a Base64
-                    val compressedBytes = compressImage(originalBytes, 70) // 70% de calidad
+                    val compressedBytes = compressImage(originalBytes, 70)
                     if (compressedBytes != null) {
                         _generatedImageBase64.value = Base64.encodeToString(compressedBytes, Base64.DEFAULT)
-                        println("--- Imagen convertida a Base64. Longitud: ${_generatedImageBase64.value?.length} ---")
                     } else {
                         _generatedImageBase64.value = null
-                        println("--- No se pudo comprimir la imagen ---")
                     }
                 } else {
                     _generatedImageBase64.value = null
-                    println("--- No se pudo convertir la imagen de URI a bytes originales ---")
                 }
             }
         } else {
@@ -198,10 +187,6 @@ class Wizard2ViewModel(
         }
     }
 
-    /**
-     * Convierte una URI de imagen a un ByteArray.
-     * Necesita el contexto de la aplicación para acceder al ContentResolver.
-     */
     private fun uriToByteArray(uri: Uri): ByteArray? {
         val contentResolver = getApplication<Application>().contentResolver
         return try {
@@ -209,31 +194,21 @@ class Wizard2ViewModel(
                 inputStream.readBytes()
             }
         } catch (e: IOException) {
-            println("Error al leer la imagen de la URI: ${e.message}")
             null
         }
     }
 
-    /**
-     * Comprime un ByteArray de imagen a un formato JPEG con una calidad dada.
-     */
     private fun compressImage(byteArray: ByteArray, quality: Int): ByteArray? {
         return try {
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             val outputStream = ByteArrayOutputStream()
-            // Comprime a JPEG. Puedes cambiar a PNG si lo prefieres, pero JPEG es mejor para fotos.
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
             outputStream.toByteArray()
         } catch (e: Exception) {
-            println("Error al comprimir la imagen: ${e.message}")
             null
         }
     }
 
-    /**
-     * Genera todos los objetos ocultos (Abilities, Equipment, Competencies, Stats, isPublic)
-     * basándose en las selecciones de Raza, Clase y Trasfondo.
-     */
     private fun generateHiddenCharacterData(race: Race?, charClass: CharacterClass?, background: Background?) {
 
         val newAbilities = Abilities(
@@ -291,7 +266,6 @@ class Wizard2ViewModel(
         _isPublic.value = false
     }
 
-    // La imagen no es obligatoria para la creación del personaje
     fun areSelectionsComplete(): Boolean {
         return _selectedRace.value != null &&
                 _selectedClass.value != null &&
@@ -315,15 +289,13 @@ class Wizard2ViewModel(
             val finalCharacter = getFinalCharacterData(userId)
 
             if (finalCharacter == null) {
-                _characterCreationStatus.value = Result.failure(IllegalStateException("No se pudo construir el objeto Characters completo. Verificar userId o datos generados."))
+                _characterCreationStatus.value = Result.failure(IllegalStateException("No se pudo crear el personaje."))
                 return@launch
             }
 
             try {
-                // Realiza la llamada al UseCase y actualiza el estado
                 _characterCreationStatus.value = createCharacterUseCase(finalCharacter)
             } catch (e: Exception) {
-                println("Error en Wizard2ViewModel.createCharacter: ${e.message}")
                 e.printStackTrace()
                 _characterCreationStatus.value = Result.failure(e)
             }
@@ -334,7 +306,6 @@ class Wizard2ViewModel(
         val fullUser: User? = getUserByIdUseCase(userId).firstOrNull()
 
         if (fullUser == null) {
-            println("ERROR: No se pudo obtener el objeto User completo para userId: $userId")
             return null
         }
 
@@ -353,7 +324,7 @@ class Wizard2ViewModel(
             abilities = generatedAbilities.value!!,
             equipment = generatedEquipment.value!!,
             competencies = generatedCompetencies.value!!,
-            image = generatedImageBase64.value, // ¡CAMBIADO AQUÍ! Ya no necesitas .toByteArray(Charsets.UTF_8)
+            image = generatedImageBase64.value,
             isPublic = isPublic.value,
             user = fullUser
         )

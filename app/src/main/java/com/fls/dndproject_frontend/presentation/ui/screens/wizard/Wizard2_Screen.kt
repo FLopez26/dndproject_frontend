@@ -54,38 +54,28 @@ fun Wizard2_Screen(
     val selectedClass by viewModel.selectedClass.collectAsState()
     val selectedBackground by viewModel.selectedBackground.collectAsState()
 
-    val selectedImageUri by viewModel.selectedImageUri.collectAsState() // Nuevo: para observar la URI de la imagen
+    val selectedImageUri by viewModel.selectedImageUri.collectAsState()
 
-    // Observar el estado de la creación del personaje
     val characterCreationStatus by viewModel.characterCreationStatus.collectAsState()
 
-    // Lanzador de actividad para seleccionar una imagen de la galería
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            viewModel.setSelectedImageUri(it) // Pasa la URI al ViewModel
+            viewModel.setSelectedImageUri(it)
         }
     }
 
-    // Usar LaunchedEffect para reaccionar a los cambios en el estado de creación
     LaunchedEffect(characterCreationStatus) {
         characterCreationStatus?.let { result ->
             result.onSuccess {
-                println("--- Personaje Creado Exitosamente (desde UI observer) ---")
-                // Navegar a la pantalla de personajes si todo fue bien
                 userId?.let {
                     navController.navigate(Screen.MyCharacters.createRoute(it)) {
                         popUpTo(Screen.MyCharacters.route) { inclusive = true }
                     }
                 }
             }.onFailure { e ->
-                println("--- Error al Crear Personaje (desde UI observer) ---")
-                println("Error: ${e.message}")
-                // TODO: Mostrar un Snackbar o Toast al usuario con el error
             }
-            // Puedes resetear el estado si quieres que no se dispare de nuevo al recomponer
-            // viewModel.resetCharacterCreationStatus() // Si implementas esta función en el ViewModel
         }
     }
 
@@ -233,7 +223,7 @@ fun Wizard2_Screen(
                     }
                 }
 
-                // --- Nueva Sección para la Imagen ---
+                // --- Sección de Imagen ---
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "¿Quieres añadir una imagen?",
@@ -243,7 +233,7 @@ fun Wizard2_Screen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { pickImageLauncher.launch("image/*") }, // Lanza la actividad para seleccionar imagen
+                    onClick = { pickImageLauncher.launch("image/*") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
@@ -291,11 +281,9 @@ fun Wizard2_Screen(
                     userId?.let {
                         viewModel.createCharacter(it)
                     } ?: run {
-                        println("Error: userId es null. No se puede crear el personaje.")
-                        // Considera mostrar un mensaje al usuario aquí
                     }
                 },
-                enabled = viewModel.areSelectionsComplete(), // El botón está habilitado si las selecciones están completas
+                enabled = viewModel.areSelectionsComplete(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)

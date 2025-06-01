@@ -47,7 +47,6 @@ fun MyCharactersCard(
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // Verifica si la imagen existe y no está vacía
             if (!character.image.isNullOrEmpty()) {
                 val decodedBytes = remember(character.image) {
                     try {

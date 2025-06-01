@@ -1,4 +1,3 @@
-// src/main/java/com/fls/dndproject_frontend/presentation/ui/screens/forum/ForumScreen.kt
 package com.fls.dndproject_frontend.presentation.ui.screens.forum
 
 import androidx.compose.foundation.layout.Arrangement
@@ -44,10 +43,6 @@ fun ForumScreen(
     val publicCharacters by forumViewModel.publicCharacters.collectAsState()
     val isLoading by forumViewModel.isLoading.collectAsState() // Observa el nuevo estado de carga
     val hasPublicCharacters by forumViewModel.hasPublicCharacters.collectAsState()
-
-    LaunchedEffect(Unit) {
-        // forumViewModel.loadPublicCharacters() // Ya se llama en el init del ViewModel
-    }
 
     Scaffold(
         topBar = {
@@ -109,7 +104,7 @@ fun ForumScreen(
                     ) {
                         CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                         Text(
-                            text = "Cargando personajes públicos . . .",
+                            text = "Cargando personajes públicos...",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }

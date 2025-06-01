@@ -15,7 +15,7 @@ class BackgroundRestRepository(private val backgroundServiceClient: BackgroundSe
         observeQuery(retryTime = 2000) {
             backgroundServiceClient
                 .getAllBackgrounds()
-                .map { it.toBackground() } // Assuming a .toBackground() extension function on the DTO
+                .map { it.toBackground() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -31,10 +31,7 @@ class BackgroundRestRepository(private val backgroundServiceClient: BackgroundSe
                     emit(newResult)
                     isFirstEmission = false
                 }
-            } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
-                // println("Error observing query: ${e.message}")
-            }
+            } catch (e: Exception) {}
             delay(retryTime)
         }
     }.flowOn(Dispatchers.IO)

@@ -15,7 +15,7 @@ class CharacterClassRestRepository(private val characterClassServiceClient: Char
         observeQuery(retryTime = 2000) {
             characterClassServiceClient
                 .getAllCharacterClasses()
-                .map { it.toCharacterClass() } // Assuming a .toCharacterClass() extension function on the DTO
+                .map { it.toCharacterClass() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -31,9 +31,7 @@ class CharacterClassRestRepository(private val characterClassServiceClient: Char
                     emit(newResult)
                     isFirstEmission = false
                 }
-            } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
-            }
+            } catch (e: Exception) {}
             delay(retryTime)
         }
     }.flowOn(Dispatchers.IO)

@@ -61,10 +61,8 @@ val appModule = module {
     single { get<Retrofit>().create(StatsServiceClient::class.java) }
     single { get<Retrofit>().create(StatsChangeServiceClient::class.java) }
     single { get<Retrofit>().create(UserServiceClient::class.java) }
-
     single { OllamaApiClient() }
     single<ChatRepository> { ChatRepositoryImpl(get()) }
-    factory { SendMessageUseCase(get()) }
 
     single { AbilitiesRestRepository(get()) }
     single { BackgroundRestRepository(get()) }
@@ -89,6 +87,7 @@ val appModule = module {
     factory { GetAllRacesUseCase(get()) }
     factory { CreateCharacterUseCase(get()) }
     factory { DeleteCharacterUseCase(get()) }
+    factory { SendMessageUseCase(get()) }
 
     viewModel { CreateAccountViewModel(get(),get())}
     viewModel { LoginViewModel(get()) }

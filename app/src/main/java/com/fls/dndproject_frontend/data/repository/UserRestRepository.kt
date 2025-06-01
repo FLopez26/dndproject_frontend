@@ -24,7 +24,7 @@ class UserRestRepository(val userServiceClient: UserServiceClient) {
             val userDto = userServiceClient.getUserById(userId)
             emit(userDto?.toUser())
         } catch (e: Exception) {
-            Log.e("UserRestRepository", "Error fetching user by ID $userId: ${e.message}", e)
+            Log.e("UserRestRepository", "error buscando usuario id $userId: ${e.message}", e)
             emit(null)
         }
     }.flowOn(Dispatchers.IO)
@@ -43,7 +43,7 @@ class UserRestRepository(val userServiceClient: UserServiceClient) {
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                Log.e("ObserveQuery", "Error durante la consulta: ${e.message}", e)
+                Log.e("ObserveQuery", "Error durante la busqueda: ${e.message}", e)
             }
             delay(retryTime)
         }

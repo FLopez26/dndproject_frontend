@@ -1,4 +1,3 @@
-// presentation/ui/screens/wizard/Wizard1_Screen.kt
 package com.fls.dndproject_frontend.presentation.ui.screens.wizard
 
 import androidx.compose.foundation.clickable
@@ -116,7 +115,6 @@ fun Wizard1_Screen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = outlinedTextFieldColors,
                     singleLine = false,
-                    // maxLines = 5
                 )
 
                 OutlinedTextField(
@@ -126,7 +124,6 @@ fun Wizard1_Screen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = outlinedTextFieldColors,
                     singleLine = false,
-                    // maxLines = 5
                 )
 
                 OutlinedTextField(
@@ -136,7 +133,6 @@ fun Wizard1_Screen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = outlinedTextFieldColors,
                     singleLine = false,
-                    // maxLines = 5
                 )
 
                 OutlinedTextField(
@@ -146,7 +142,6 @@ fun Wizard1_Screen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = outlinedTextFieldColors,
                     singleLine = false,
-                    // maxLines = 5
                 )
 
                 OutlinedTextField(
@@ -156,7 +151,6 @@ fun Wizard1_Screen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = outlinedTextFieldColors,
                     singleLine = false,
-                    // maxLines = 5
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

@@ -15,7 +15,7 @@ class RaceRestRepository(private val raceServiceClient: RaceServiceClient) {
         observeQuery(retryTime = 2000) {
             raceServiceClient
                 .getAllRaces()
-                .map { it.toRace() } // Assuming a .toRace() extension function on the DTO
+                .map { it.toRace() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -32,7 +32,6 @@ class RaceRestRepository(private val raceServiceClient: RaceServiceClient) {
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
             }
             delay(retryTime)
         }

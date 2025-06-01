@@ -15,7 +15,7 @@ class StatsRestRepository(private val statsServiceClient: StatsServiceClient) {
         observeQuery(retryTime = 2000) {
             statsServiceClient
                 .getAllStats()
-                .map { it.toStats() } // Assuming a .toStats() extension function on the DTO
+                .map { it.toStats() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -32,7 +32,6 @@ class StatsRestRepository(private val statsServiceClient: StatsServiceClient) {
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
             }
             delay(retryTime)
         }

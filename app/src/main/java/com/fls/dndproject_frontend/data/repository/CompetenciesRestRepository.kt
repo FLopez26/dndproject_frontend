@@ -15,7 +15,7 @@ class CompetenciesRestRepository(private val competenciesServiceClient: Competen
         observeQuery(retryTime = 2000) {
             competenciesServiceClient
                 .getAllCompetencies()
-                .map { it.toCompetencies() } // Assuming a .toCompetencies() extension function on the DTO
+                .map { it.toCompetencies() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -32,7 +32,6 @@ class CompetenciesRestRepository(private val competenciesServiceClient: Competen
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
             }
             delay(retryTime)
         }

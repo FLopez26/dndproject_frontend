@@ -25,13 +25,13 @@ fun SelectableCard(
 ) {
     Card(
         modifier = modifier
-            .aspectRatio(1f) // Esto hace que la tarjeta sea cuadrada (ancho = alto)
+            .aspectRatio(1f)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(185, 0, 0) else Color.LightGray // Rojo si seleccionada, Gris si no
+            containerColor = if (isSelected) Color(185, 0, 0) else Color.LightGray
         ),
-        border = BorderStroke(2.dp, if (isSelected) Color(100, 0, 0) else Color.Gray) // Borde para mayor contraste
+        border = BorderStroke(2.dp, if (isSelected) Color(100, 0, 0) else Color.Gray)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -42,7 +42,7 @@ fun SelectableCard(
                 color = if (isSelected) Color.White else Color.Black,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(4.dp) // Pequeño padding interno para el texto
+                modifier = Modifier.padding(4.dp)
             )
         }
     }

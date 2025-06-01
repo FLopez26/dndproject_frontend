@@ -27,7 +27,7 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
                 if (characterDto != null) {
                     Result.success(characterDto.toCharacters())
                 } else {
-                    Result.failure(NoSuchElementException("Personaje con id $characterId no encontrado"))
+                    Result.failure(NoSuchElementException("Personaje id $characterId no encontrado"))
                 }
             } catch (e: Exception) {
                 Result.failure(e)
@@ -92,7 +92,7 @@ class CharactersRestRepository(private val charactersServiceClient: CharactersSe
                 if (updatedCharacterDto != null) {
                     Result.success(updatedCharacterDto.toCharacters())
                 } else {
-                    Result.failure(IllegalStateException("La actualización del personaje retornó nulo."))
+                    Result.failure(IllegalStateException("null"))
                 }
             } catch (e: Exception) {
                 Result.failure(e)

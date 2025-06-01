@@ -1,8 +1,7 @@
 package com.fls.dndproject_frontend.presentation.ui.screens.characterInfo
 
-import android.graphics.BitmapFactory // Necesario para BitmapFactory
-import android.util.Base64 // Necesario para Base64.decode
-
+import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,12 +43,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.draw.clip
-// Elimina coil.compose.AsyncImage y otras importaciones de Coil si no las usas en otro lugar de este archivo
-// import coil.compose.AsyncImage
-// import coil.request.ImageRequest
-// import coil.decode.Base64Decoder
-// import androidx.compose.ui.platform.LocalContext // Solo si no hay otras cosas de Coil
-
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Public
@@ -62,11 +55,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 import com.fls.dndproject_frontend.presentation.navigation.Screen
-
-// IMPORTANTE:
-// Añade esta importación para el componente Image de Compose UI
-import androidx.compose.foundation.Image // Asegúrate de que esta línea esté presente
-import androidx.compose.ui.graphics.asImageBitmap // Necesario para convertir Bitmap a ImageBitmap
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,10 +81,8 @@ fun CharacterInfo_Screen(
 
     LaunchedEffect(characterDeletedSuccessfully) {
         if (characterDeletedSuccessfully) {
-            println("DEBUG: characterDeletedSuccessfully es TRUE. Intentando navegar.")
             if (userId != null) {
                 val routeWithId = Screen.MyCharacters.route + "/${userId}"
-                println("DEBUG: Ruta de navegación: $routeWithId")
                 navController.navigate(routeWithId) {
                     popUpTo(Screen.MyCharacters.route) {
                         inclusive = true
@@ -103,7 +91,6 @@ fun CharacterInfo_Screen(
                 }
                 characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
             } else {
-                println("ERROR: userId es nulo al intentar navegar después de la eliminación.")
                 navController.popBackStack()
                 characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
             }

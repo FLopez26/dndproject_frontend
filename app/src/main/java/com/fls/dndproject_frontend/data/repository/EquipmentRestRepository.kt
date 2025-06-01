@@ -15,7 +15,7 @@ class EquipmentRestRepository(private val equipmentServiceClient: EquipmentServi
         observeQuery(retryTime = 2000) {
             equipmentServiceClient
                 .getAllEquipment()
-                .map { it.toEquipment() } // Assuming a .toEquipment() extension function on the DTO
+                .map { it.toEquipment() }
         }
 
     fun <T> observeQuery(retryTime: Long = 5000, query: suspend () -> List<T>): Flow<List<T>> = flow {
@@ -32,7 +32,6 @@ class EquipmentRestRepository(private val equipmentServiceClient: EquipmentServi
                     isFirstEmission = false
                 }
             } catch (e: Exception) {
-                // Log the exception here if needed for debugging, but suppress for continuous operation
             }
             delay(retryTime)
         }
