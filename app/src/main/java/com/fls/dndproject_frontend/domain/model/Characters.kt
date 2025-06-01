@@ -20,7 +20,7 @@ data class Characters(
     val equipment: Equipment?,
     val competencies: Competencies?,
 
-    val image: ByteArray?,
+    val image: String?,
     val isPublic: Boolean?,
 
     val user: User?

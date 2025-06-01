@@ -1,6 +1,7 @@
 package com.fls.dndproject_frontend.presentation.ui.components
 
 import android.graphics.BitmapFactory
+import android.util.Base64 // Importa Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,10 +47,25 @@ fun MyCharactersCard(
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            if (character.image != null && character.image.isNotEmpty()) {
-                val bitmap = remember(character.image) {
-                    BitmapFactory.decodeByteArray(character.image, 0, character.image.size)
+            // Verifica si la imagen existe y no está vacía
+            if (!character.image.isNullOrEmpty()) {
+                val decodedBytes = remember(character.image) {
+                    try {
+                        Base64.decode(character.image, Base64.DEFAULT)
+                    } catch (e: IllegalArgumentException) {
+                        println("Error al decodificar Base64: ${e.message}")
+                        null
+                    }
                 }
+
+                val bitmap = remember(decodedBytes) {
+                    if (decodedBytes != null) {
+                        BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    } else {
+                        null
+                    }
+                }
+
                 if (bitmap != null) {
                     Image(
                         bitmap = bitmap.asImageBitmap(),

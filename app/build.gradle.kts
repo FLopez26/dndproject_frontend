@@ -67,7 +67,6 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.1")
     implementation("io.insert-koin:koin-androidx-compose:3.4.1")
     implementation("org.mindrot:jbcrypt:0.4")
-    implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("io.ktor:ktor-client-core:2.3.9")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.9")
@@ -75,4 +74,5 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.9")
     implementation("io.ktor:ktor-client-logging:2.3.11")
     implementation("io.ktor:ktor-client-android:2.3.11")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }

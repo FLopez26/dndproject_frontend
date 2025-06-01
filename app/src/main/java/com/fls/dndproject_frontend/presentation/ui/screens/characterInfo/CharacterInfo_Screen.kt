@@ -1,5 +1,8 @@
 package com.fls.dndproject_frontend.presentation.ui.screens.characterInfo
 
+import android.graphics.BitmapFactory // Necesario para BitmapFactory
+import android.util.Base64 // Necesario para Base64.decode
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +44,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.draw.clip
-import coil.compose.AsyncImage
+// Elimina coil.compose.AsyncImage y otras importaciones de Coil si no las usas en otro lugar de este archivo
+// import coil.compose.AsyncImage
+// import coil.request.ImageRequest
+// import coil.decode.Base64Decoder
+// import androidx.compose.ui.platform.LocalContext // Solo si no hay otras cosas de Coil
+
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Public
@@ -54,6 +62,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 import com.example.dndproject_frontend.ui.theme.AppStyles.outlinedTextFieldColors
 import com.fls.dndproject_frontend.presentation.navigation.Screen
+
+// IMPORTANTE:
+// Añade esta importación para el componente Image de Compose UI
+import androidx.compose.foundation.Image // Asegúrate de que esta línea esté presente
+import androidx.compose.ui.graphics.asImageBitmap // Necesario para convertir Bitmap a ImageBitmap
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,23 +91,20 @@ fun CharacterInfo_Screen(
 
     LaunchedEffect(characterDeletedSuccessfully) {
         if (characterDeletedSuccessfully) {
-            // Imprime para depurar: ver si se ejecuta este bloque
             println("DEBUG: characterDeletedSuccessfully es TRUE. Intentando navegar.")
             if (userId != null) {
                 val routeWithId = Screen.MyCharacters.route + "/${userId}"
                 println("DEBUG: Ruta de navegación: $routeWithId")
                 navController.navigate(routeWithId) {
-                    // Estas banderas son CRUCIALES para limpiar el back stack
                     popUpTo(Screen.MyCharacters.route) {
-                        inclusive = true // Elimina la pantalla actual y cualquier MyCharacters previo
+                        inclusive = true
                     }
-                    launchSingleTop = true // Evita duplicados si ya está en la parte superior
+                    launchSingleTop = true
                 }
-                // IMPORTANTE: Resetear el estado DESPUÉS de intentar la navegación
                 characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
             } else {
                 println("ERROR: userId es nulo al intentar navegar después de la eliminación.")
-                navController.popBackStack() // Fallback
+                navController.popBackStack()
                 characterInfoViewModel.resetCharacterDeletedSuccessfullyState()
             }
         }
@@ -123,11 +134,11 @@ fun CharacterInfo_Screen(
                     }
                 },
                 actions = {
-                    character.let { character ->
-                        val isOwner = character?.user?.userId == userId
+                    character.let { char ->
+                        val isOwner = char?.user?.userId == userId
 
                         if (isOwner) {
-                            val publicIcon = if (character?.isPublic == true) {
+                            val publicIcon = if (char?.isPublic == true) {
                                 Icons.Filled.Public
                             } else {
                                 Icons.Filled.Lock
@@ -136,7 +147,7 @@ fun CharacterInfo_Screen(
                             IconButton(onClick = { showPublicDialog = true }) {
                                 Icon(
                                     imageVector = publicIcon,
-                                    contentDescription = if (character?.isPublic == true) "Personaje Público" else "Personaje Privado",
+                                    contentDescription = if (char?.isPublic == true) "Personaje Público" else "Personaje Privado",
                                     tint = Color.White
                                 )
                             }
@@ -248,8 +259,43 @@ fun CharacterInfo_Screen(
                             .border(2.dp, Color.Gray, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
-                        val imageUrl = character?.image?.toString()
-                        if (imageUrl.isNullOrEmpty()) {
+                        if (!character?.image.isNullOrEmpty()) {
+                            val decodedBytes = remember(character?.image) {
+                                try {
+                                    Base64.decode(character?.image, Base64.DEFAULT)
+                                } catch (e: IllegalArgumentException) {
+                                    println("Error al decodificar Base64 en CharacterInfo_Screen: ${e.message}")
+                                    null
+                                }
+                            }
+
+                            val bitmap = remember(decodedBytes) {
+                                if (decodedBytes != null) {
+                                    BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                                } else {
+                                    null
+                                }
+                            }
+
+                            if (bitmap != null) {
+                                Image(
+                                    bitmap = bitmap.asImageBitmap(),
+                                    contentDescription = "Imagen del personaje ${character?.name}",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Icon(
+                                        imageVector = Icons.Default.Image,
+                                        contentDescription = "Error al cargar imagen",
+                                        modifier = Modifier.size(64.dp),
+                                        tint = Color.Gray
+                                    )
+                                    Text("Error de imagen", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                }
+                            }
+                        } else {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Icon(
                                     imageVector = Icons.Default.Image,
@@ -257,15 +303,8 @@ fun CharacterInfo_Screen(
                                     modifier = Modifier.size(64.dp),
                                     tint = Color.Gray
                                 )
-                                Text("Imagen no disponible", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                Text("Sin imagen", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                             }
-                        } else {
-                            AsyncImage(
-                                model = imageUrl,
-                                contentDescription = "Imagen del personaje ${character?.name}",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            )
                         }
                     }
                 }
@@ -465,10 +504,9 @@ fun CharacterInfo_Screen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showDeleteDialog = false // Cierra el diálogo
+                        showDeleteDialog = false
                         character?.characterId?.let { id ->
-                            characterInfoViewModel.deleteCharacter(id) // Solo llama al ViewModel
-                            // ¡LA NAVEGACIÓN OCURRE EN EL LaunchedEffect!
+                            characterInfoViewModel.deleteCharacter(id)
                         }
                     }
                 ) {
@@ -505,8 +543,8 @@ fun Headers(text: String, modifier: Modifier = Modifier) {
         text = text,
         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
         modifier = modifier
-            .fillMaxWidth() 
-            .padding(start = 4.dp, bottom = 8.dp), 
+            .fillMaxWidth()
+            .padding(start = 4.dp, bottom = 8.dp),
         textAlign = TextAlign.Start
     )
 }

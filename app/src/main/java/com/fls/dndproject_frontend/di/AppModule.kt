@@ -97,6 +97,6 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { ForumViewModel(get()) }
     viewModel { Wizard1ViewModel() }
-    viewModel { Wizard2ViewModel(get(), get(), get(), get(), get()) }
+    viewModel { Wizard2ViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { ChatViewModel(get()) }
 }

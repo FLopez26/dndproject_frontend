@@ -1,5 +1,8 @@
 package com.fls.dndproject_frontend.presentation.ui.screens.wizard
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,9 +23,8 @@ import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import com.fls.dndproject_frontend.presentation.ui.components.SelectableCard
+import coil.compose.AsyncImage
 import com.fls.dndproject_frontend.presentation.navigation.Screen
-// Ya no necesitamos importar CreateCharacterUseCase ni koinInject aquí,
-// porque la pantalla no los usa directamente.
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +38,6 @@ fun Wizard2_Screen(
     bonds: String,
     flaws: String,
     viewModel: Wizard2ViewModel = koinViewModel()
-    // createCharacterUseCase: CreateCharacterUseCase = koinInject() // ¡ELIMINAMOS ESTO!
 ) {
     val decodedName = URLDecoder.decode(name, StandardCharsets.UTF_8.toString())
     val decodedDescription = URLDecoder.decode(description, StandardCharsets.UTF_8.toString())
@@ -53,8 +54,19 @@ fun Wizard2_Screen(
     val selectedClass by viewModel.selectedClass.collectAsState()
     val selectedBackground by viewModel.selectedBackground.collectAsState()
 
+    val selectedImageUri by viewModel.selectedImageUri.collectAsState() // Nuevo: para observar la URI de la imagen
+
     // Observar el estado de la creación del personaje
     val characterCreationStatus by viewModel.characterCreationStatus.collectAsState()
+
+    // Lanzador de actividad para seleccionar una imagen de la galería
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            viewModel.setSelectedImageUri(it) // Pasa la URI al ViewModel
+        }
+    }
 
     // Usar LaunchedEffect para reaccionar a los cambios en el estado de creación
     LaunchedEffect(characterCreationStatus) {
@@ -220,6 +232,43 @@ fun Wizard2_Screen(
                         }
                     }
                 }
+
+                // --- Nueva Sección para la Imagen ---
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "¿Quieres añadir una imagen?",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = { pickImageLauncher.launch("image/*") }, // Lanza la actividad para seleccionar imagen
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(Color(185, 0, 0))
+                ) {
+                    Text("Seleccionar Imagen", color = Color.White)
+                }
+
+                selectedImageUri?.let { uri ->
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Imagen seleccionada:",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.align(Alignment.Start)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AsyncImage(
+                        model = uri,
+                        contentDescription = "Imagen seleccionada para el personaje",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
@@ -239,7 +288,12 @@ fun Wizard2_Screen(
             // --- Botón para Crear Personaje ---
             Button(
                 onClick = {
-                    viewModel.createCharacter(userId ?: 0)
+                    userId?.let {
+                        viewModel.createCharacter(it)
+                    } ?: run {
+                        println("Error: userId es null. No se puede crear el personaje.")
+                        // Considera mostrar un mensaje al usuario aquí
+                    }
                 },
                 enabled = viewModel.areSelectionsComplete(), // El botón está habilitado si las selecciones están completas
                 modifier = Modifier

@@ -20,7 +20,7 @@ data class CreateCharactersDto(
     val equipmentId: Int?,
     val competenciesId: Int?,
 
-    val image: ByteArray?,
+    val image: String?,
     val isPublic: Boolean?,
     val userId: Int
 ) {

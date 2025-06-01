@@ -25,7 +25,7 @@ data class CharactersDto(
     val abilities: AbilitiesDto?,
     val equipment: EquipmentDto?,
     val competencies: CompetenciesDto?,
-    val image: ByteArray?,
+    val image: String?,
     val isPublic: Boolean?,
     val user: UserDto?
 ) {
