@@ -3,14 +3,14 @@ package com.fls.dndproject_frontend.presentation.viewmodel.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fls.dndproject_frontend.data.repository.ChatRepositoryException
-import com.fls.dndproject_frontend.domain.repository.ChatRepository
+import com.fls.dndproject_frontend.domain.usecase.ollama.SendMessageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.update
 
 class ChatViewModel(
-    private val chatRepository: ChatRepository
+    private val chatUseCase: SendMessageUseCase
 ) : ViewModel() {
 
     private val _chatUiState = MutableStateFlow(ChatUiState())
@@ -27,7 +27,7 @@ class ChatViewModel(
 
         viewModelScope.launch {
             try {
-                chatRepository.sendMessage(message).collect { chunk ->
+                chatUseCase(message).collect { chunk ->
                     _chatUiState.update { currentState ->
                         val updatedMessages = currentState.messages.toMutableList()
                         val lastMessage = updatedMessages.lastOrNull()
